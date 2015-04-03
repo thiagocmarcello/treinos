@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../tamplate/template.xhtml">
+	<ui:define name="content">
+		<p:tabView id="personalTB" styleClass="sem-bordas"
+			activeIndex="#{personalController.indexTab}">
+			<p:tab title="Cadastrar" id="personalTA">
+				<h:form id="personalFR">
+					<p:panelGrid columns="2" id="personalPG" styleClass="semBorda">
+						<p:outputLabel value="Nome: " />
+						<p:inputText id="nomeUsuario" required="true"
+							requiredMessage="Campo Nome obrigatório!"
+							value="#{personalController.personal.nome}" />
+						<p:outputLabel value="Email: " />
+						<p:inputText value="#{personalController.personal.email}"
+							required="true" name="email"
+							requiredMessage="Campo Email obrigatório!" />
+						<p:outputLabel value="Senha: " />
+						<p:password value="#{personalController.personal.senha}"
+							required="true" name="email"
+							requiredMessage="Campo Senha obrigatório!" />
+						<p:commandButton action="#{personalController.salvar}"
+							value="Salvar..." update=":personalTB :growl" />
+					</p:panelGrid>
+				</h:form>
+			</p:tab>
+			<!-- *** CONSULTAR *** -->
+			<p:tab title="Consultar">
+				<h:panelGrid>
+					<h:form>
+						<p:dataTable id="tablePessoa"
+							value="#{personalController.personais}" var="p" rows="6"
+							emptyMessage="sem registros" paginator="true">
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Email" />
+								</f:facet>
+								<h:outputText value="#{p.nome}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Email" />
+								</f:facet>
+								<h:outputText value="#{p.email}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Ações" />
+								</f:facet>
+								<h:commandButton action="#{personalController.deletar(p)}"
+									value="Remover" />
+								<h:commandButton action="#{personalController.editar(p)}"
+									value="Alterar" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+	</ui:define>
+</ui:composition>
+</html>

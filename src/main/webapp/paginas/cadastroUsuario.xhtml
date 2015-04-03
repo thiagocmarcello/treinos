@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+
+<ui:composition template="../tamplate/template.xhtml">
+	<ui:define name="content">
+	<h:form>
+	<h:panelGrid columns="2">
+	
+	<h:outputLabel value="Nome: " />
+	<h:inputText id="nomeUsuario" 
+				 required="true"
+				 requiredMessage="Campo Nome da Campanha obrigatório" 
+				 value="#{usuarioController.nome}" />
+	
+	<h:outputLabel value="Email: " />
+	<h:inputText value="#{usuarioController.email}" />
+	
+	<h:commandButton action="#{usuarioController.salvar}" value="Salvar..." />
+	
+
+		</h:panelGrid>
+	</h:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../tamplate/template.xhtml">
+	<ui:define name="content">
+		<p:panel header="Metodologia">
+			<p:tabView id="metodologiaTB" styleClass="sem-bordas"
+				activeIndex="#{metodologiaController.indexTab}">
+				<p:tab title="Cadastrar">
+					<h:form>
+						<p:panelGrid columns="2" id="metodologiaPG" styleClass="semBorda">
+							<p:outputLabel value="Nome:" />
+							<p:inputText id="nomeMetodologia" required="true"
+								requiredMessage="Campo Nome obrigatório!"
+								value="#{metodologiaController.metodologia.nome}" />
+							<p:commandButton action="#{metodologiaController.salvar()}"
+								value="Salvar" update=":metodologiaTB :growl" />
+						</p:panelGrid>
+					</h:form>
+				</p:tab>
+				<!-- *** CONSULTAR *** -->
+				<p:tab title="Consultar">
+					<h:panelGrid>
+						<h:form>
+							<p:dataTable id="tableMetodologia"
+								value="#{metodologiaController.metodologias}" var="p" rows="6"
+								emptyMessage="sem registros" paginator="true">
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Nome" />
+									</f:facet>
+									<h:outputText value="#{p.nome}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Ações" />
+									</f:facet>
+									<h:commandButton action="#{metodologiaController.deletar(p)}"
+										value="Remover" />
+									<h:commandButton action="#{metodologiaController.editar(p)}"
+										value="Alterar" />
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+</html>

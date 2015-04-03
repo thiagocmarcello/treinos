@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../tamplate/template.xhtml">
+	<ui:define name="content">
+		<p:tabView id="aparelhoTB" styleClass="sem-bordas"
+			activeIndex="#{aparelhoController.indexTab}">
+			<p:tab title="Cadastrar">
+				<h:form id="aparelhoFO">
+					<p:panelGrid columns="2" id="aparelhoPG" styleClass="semBorda">
+						<h:outputLabel value="Nome: " />
+						<p:inputText id="nomeAparelho" required="true"
+							requiredMessage="Campo Nome do Aparelho Obrigatório!"
+							value="#{aparelhoController.aparelho.nome}" />
+						<p:commandButton action="#{aparelhoController.salvar}"
+							value="Salvar" update=":aparelhoTB :growl" />
+					</p:panelGrid>
+				</h:form>
+			</p:tab>
+			<!-- *** CONSULTAR *** -->
+			<p:tab title="Consultar">
+				<h:form>
+					<h:panelGrid>
+						<p:dataTable id="tableAparelhos"
+							value="#{aparelhoController.aparelhos}" var="p" rows="6"
+							emptyMessage="sem registros" paginator="true">
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Nome" />
+								</f:facet>
+								<h:outputText value="#{p.nome}" />
+							</p:column>
+<!-- 							<p:column> -->
+<!-- 								<f:facet name="header"> -->
+<!-- 									<h:outputLabel value="Academia" /> -->
+<!-- 								</f:facet> -->
+<!-- 								<p:dataList value="#{p.academiasAparelhos}" var="aa"> -->
+<!-- 								#{aa.academia.nome} -->
+<!-- 								</p:dataList> -->
+<!-- 							</p:column> -->
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Ações" />
+								</f:facet>
+								<p:commandButton action="#{aparelhoController.deletar(p)}"
+									value="Remover" />
+								<p:commandButton action="#{aparelhoController.editar(p)}"
+									value="Alterar" process="@form" update=":aparelhoTB"/>
+							</p:column>
+						</p:dataTable>
+					</h:panelGrid>
+				</h:form>
+			</p:tab>
+		</p:tabView>
+	</ui:define>
+</ui:composition>
+</html>

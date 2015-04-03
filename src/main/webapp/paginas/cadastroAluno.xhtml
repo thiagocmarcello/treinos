@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../tamplate/template.xhtml">
+	<ui:define name="content">
+		<p:panel header="Aluno">
+			<p:tabView id="alunoTB" activeIndex="#{alunoController.indexTab}"
+				styleClass="sem-bordas">
+				<p:tab title="Cadastrar">
+					<h:form>
+						<p:panelGrid columns="2" styleClass="semBorda">
+
+							<h:outputLabel value="Nome: " />
+							<p:inputText id="nomeUsuario" required="true"
+								requiredMessage="Campo Nome obrigatório!"
+								value="#{alunoController.aluno.nome}" />
+
+							<h:outputLabel value="Email: " />
+							<p:inputText value="#{alunoController.aluno.email}"
+								required="true" name="email"
+								requiredMessage="Campo Email obrigatório!" />
+
+							<h:outputLabel value="Rua: " />
+							<p:inputText value="#{alunoController.endereco.rua}" />
+
+							<h:outputLabel value="Numero: " />
+							<p:inputText value="#{alunoController.endereco.numero}" />
+
+							<h:outputLabel value="Complemento: " />
+							<p:inputText value="#{alunoController.endereco.complemento}" />
+
+							<h:outputLabel value="Bairro: " />
+							<p:inputText value="#{alunoController.endereco.bairro}" />
+
+							<h:outputLabel value="Telefone: " />
+							<p:inputText value="#{alunoController.endereco.telefone01}"
+								name="telefone" onkeyup="mascara( this, mtel );" maxlength="15" />
+
+							<h:outputLabel value=" Celular: " />
+							<p:inputText value="#{alunoController.endereco.celular}"
+								name="celular" onkeyup="mascara(this, mtel);" maxlength="15" />
+
+							<h:outputText value="Academia:" />
+							<p:selectOneMenu id="academiaSOM"
+								value="#{alunoController.academiaSelecionada}"
+								converter="academiaConverter">
+								<f:selectItem itemLabel="Selecione..." itemValue="0" />
+								<f:selectItems value="#{alunoController.academias}" var="o"
+									itemValue="#{o}" itemLabel="#{o.nome}" />
+								<p:ajax />
+							</p:selectOneMenu>
+
+							<h:outputText value="Estado:" />
+							<p:selectOneMenu id="idEstado"
+								value="#{alunoController.estadoSelecionado}">
+								<f:selectItem itemLabel="Selecione..." itemValue="#{null}" />
+								<f:selectItems value="#{alunoController.estados}" var="estado"
+									itemValue="#{estado.value}" itemLabel="#{estado.label}" />
+								<f:ajax render="idCidade" event="change"
+									listener="#{alunoController.carregarCidades()}" />
+							</p:selectOneMenu>
+
+							<h:outputText value="Cidade:" />
+							<p:selectOneMenu id="idCidade"
+								value="#{alunoController.cidadeSelecionado}">
+								<f:selectItem itemLabel="Selecione..." itemValue="0" />
+								<f:selectItems value="#{alunoController.cidades}" var="cidade"
+									itemValue="#{cidade.value}" itemLabel="#{cidade.label}" />
+							</p:selectOneMenu>
+
+							<p:commandButton action="#{alunoController.salvar}"
+								value="Salvar" update=":alunoTB :growl" />
+						</p:panelGrid>
+					</h:form>
+				</p:tab>
+				<!-- *** CONSULTAR *** -->
+				<p:tab title="Consultar">
+					<h:form>
+						<h:panelGrid>
+							<p:dataTable id="tablePessoa" value="#{alunoController.alunos}"
+								var="p" rows="6" emptyMessage="sem registros" paginator="true">
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Nome" />
+									</f:facet>
+									<h:outputText value="#{p.nome}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Email" />
+									</f:facet>
+									<h:outputText value="#{p.email}" />
+								</p:column>
+								<p:column sortBy="#{p.academia.nome}">
+									<f:facet name="header">
+										<h:outputText value="Academia" />
+									</f:facet>
+									<h:outputText value="#{p.academia.nome}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Ações" />
+									</f:facet>
+									<h:commandButton action="#{alunoController.deletar(p)}"
+										value="Remover" />
+									<h:commandButton action="#{alunoController.editar(p)}"
+										value="Alterar" />
+								</p:column>
+							</p:dataTable>
+						</h:panelGrid>
+					</h:form>
+				</p:tab>
+			</p:tabView>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+</html>

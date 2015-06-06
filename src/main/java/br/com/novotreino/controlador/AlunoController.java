@@ -55,6 +55,7 @@ public class AlunoController extends BaseController<Aluno> implements
 	@PostConstruct
 	public void inicializar() {
 		aluno = new Aluno();
+		aluno.setSexo(true);
 		endereco = new Endereco();
 		carregarAlunos();
 		carregarAcademias();

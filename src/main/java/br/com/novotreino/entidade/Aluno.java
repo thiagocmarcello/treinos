@@ -31,13 +31,16 @@ public class Aluno implements Serializable {
 	
 	private String nome;
 	
-	private boolean sexo;
+	@Column
+	private Boolean sexo;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "data_nascimento")
 	private Date dataNascimento;
 	
 	private String cpf;
+	
+	private String observacao;
 	
 	@Column(unique = true)
 	private String email;
@@ -118,11 +121,11 @@ public class Aluno implements Serializable {
 		this.ativo = ativo;
 	}
 
-	public boolean isSexo() {
+	public Boolean getSexo() {
 		return sexo;
 	}
 
-	public void setSexo(boolean sexo) {
+	public void setSexo(Boolean sexo) {
 		this.sexo = sexo;
 	}
 
@@ -140,6 +143,14 @@ public class Aluno implements Serializable {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
 	}
 
 	@Override

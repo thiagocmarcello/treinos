@@ -21,6 +21,10 @@
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{alunoController.aluno.nome}" />
 
+							<h:outputLabel value="CPF: " />
+							<p:inputText value="#{alunoController.aluno.cpf}" required="true"
+								name="cpf" requiredMessage="Campo CPF obrigatório!" />
+
 							<h:outputLabel value="Email: " />
 							<p:inputText value="#{alunoController.aluno.email}"
 								required="true" name="email"
@@ -45,6 +49,21 @@
 							<h:outputLabel value=" Celular: " />
 							<p:inputText value="#{alunoController.endereco.celular}"
 								name="celular" onkeyup="mascara(this, mtel);" maxlength="15" />
+
+							<h:outputLabel value=" Sexo: " />
+							<h:selectOneRadio value="#{alunoController.aluno.sexo}">
+								<f:selectItem itemValue="true" itemLabel="Masculino" />
+								<f:selectItem itemValue="false" itemLabel="Feminino" />
+							</h:selectOneRadio>
+
+							<h:outputText value="Nascimento:" />
+							<p:calendar locale="de" navigator="true" yearRange="1950"
+								value="#{alunoController.aluno.dataNascimento}">
+								<p:ajax />
+							</p:calendar>
+
+							<h:outputLabel value=" Observações " />
+							<h:inputTextarea value="#{alunoController.aluno.observacao}" />
 
 							<h:outputText value="Academia:" />
 							<p:selectOneMenu id="academiaSOM"

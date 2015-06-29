@@ -9,111 +9,140 @@
 
 <ui:composition template="../tamplate/template.xhtml">
 	<ui:define name="content">
-	<p:panel header="Aluno Treino">
-		<h:form id="alunoTreinoFO">
-			<p:tabView id="alunoTreinoTV" activeIndex="#{alunoTreinoController.indexTab}" styleClass="sem-bordas">
-				<p:tab title="Cadastrar">
-					<h:panelGrid columns="2">
-					
-						<h:outputText value="Aluno:" />
-						<p:selectOneMenu id="alunoSOM"
-							value="#{alunoTreinoController.alunoSelecionado}"
-							converter="converterAluno">
-							<f:selectItem itemLabel="Selecione..." itemValue="0" />
-							<f:selectItems value="#{alunoTreinoController.alunos}" var="o"
-								itemValue="#{o}" itemLabel="#{o.nome}" />
-							<p:ajax />
-						</p:selectOneMenu>
+		<p:panel header="Aluno Treino">
+			<h:form id="alunoTreinoFO">
+				<p:tabView id="alunoTreinoTV"
+					activeIndex="#{alunoTreinoController.indexTab}"
+					styleClass="sem-bordas">
+					<p:tab title="Cadastrar">
+						<h:panelGrid columns="2">
 
-						<h:outputText value="Validade:" />
-						<p:calendar id="inline" value="#{alunoTreinoController.validadeTreino}" mode="inline" >
-							<p:ajax />
-						</p:calendar>
-						
-						<h:outputText value="Metodologia:" />
-						<p:selectOneMenu id="metodologiaSOM"
-							value="#{alunoTreinoController.metodologiaSelecionada}"
-							converter="converterAluno">
-							<f:selectItem itemLabel="Selecione..." itemValue="0" />
-							<f:selectItems value="#{alunoTreinoController.metodologias}" var="o"
-								itemValue="#{o}" itemLabel="#{o.nome}" />
-							<p:ajax listener="#{alunoTreinoController.buscarTreinos()}" update=":alunoTreinoFO:alunoTreinoTV:treinoSOM" />
-						</p:selectOneMenu>
-						
-						<h:outputText value="Treino:" />
-						<p:selectOneMenu id="treinoSOM"
-							value="#{alunoTreinoController.treinoSelecionado}"
-							converter="converterTreino">
-							<f:selectItem itemLabel="Selecione..." itemValue="0" />
-							<f:selectItems value="#{alunoTreinoController.treinos}" var="o"
-								itemValue="#{o}" itemLabel="#{o.nome}" />
-							<p:ajax update="detalheExercicioDL" />
-						</p:selectOneMenu>
-						
-						<h:outputText value="Detalhe:" />
-						<p:dataList id="detalheExercicioDL" value="#{alunoTreinoController.treinoSelecionado.exercicios}" 
-						emptyMessage="Selecione um Treino para ver detalhes." var="e" >
+							<h:outputLabel value="Aluno:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
+							<p:selectOneMenu id="alunoSOM" required="true"
+								requiredMessage="Campo Aluno obrigatório!"
+								value="#{alunoTreinoController.alunoSelecionado}"
+								converter="converterAluno">
+								<f:selectItem itemLabel="Selecione..." itemValue="0" />
+								<f:selectItems value="#{alunoTreinoController.alunos}" var="o"
+									itemValue="#{o}" itemLabel="#{o.nome}" />
+								<p:ajax />
+							</p:selectOneMenu>
+
+							<h:outputLabel value="Validade:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
+							<p:calendar required="true"
+								requiredMessage="Campo Validade obrigatório!" id="inline"
+								value="#{alunoTreinoController.validadeTreino}" mode="inline"
+								mindate="today">
+								<p:ajax />
+							</p:calendar>
+
+							<h:outputLabel value="Metodologia:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
+							<p:selectOneMenu id="metodologiaSOM" required="true"
+								requiredMessage="Campo Metodologia obrigatório!"
+								value="#{alunoTreinoController.metodologiaSelecionada}"
+								converter="converterAluno">
+								<f:selectItem itemLabel="Selecione..." itemValue="0" />
+								<f:selectItems value="#{alunoTreinoController.metodologias}"
+									var="o" itemValue="#{o}" itemLabel="#{o.nome}" />
+								<p:ajax listener="#{alunoTreinoController.buscarTreinos()}"
+									update=":alunoTreinoFO:alunoTreinoTV:treinoSOM" />
+							</p:selectOneMenu>
+
+							<h:outputLabel value="Treino:">
+							</h:outputLabel>
+							<p:selectOneMenu id="treinoSOM"
+								value="#{alunoTreinoController.treinoSelecionado}"
+								converter="converterTreino">
+								<f:selectItem itemLabel="Selecione..." itemValue="0" />
+								<f:selectItems value="#{alunoTreinoController.treinos}" var="o"
+									itemValue="#{o}" itemLabel="#{o.nome}" />
+								<p:ajax update="detalheExercicioDL" />
+							</p:selectOneMenu>
+
+							<h:outputText value="Detalhe:" />
+							<p:dataList id="detalheExercicioDL"
+								value="#{alunoTreinoController.treinoSelecionado.exercicios}"
+								emptyMessage="Selecione um Treino para ver detalhes." var="e">
 							#{e.aparelho.nome} #{e.sequencia}x de #{e.repeticao}
 						</p:dataList>
 
-						<p:commandButton action="#{alunoTreinoController.adicionarTreino()}"
-							value="Adicionar Treino"  process="@this" update="treinoSOM, treinoSelecionadoDL" >
-						</p:commandButton>
+							<p:commandButton
+								action="#{alunoTreinoController.adicionarTreino()}" icon="add"
+								title="Adicionar Treino" process="@this"
+								update="treinoSOM, treinoSelecionadoDL :growl">
+							</p:commandButton>
 
-						<p:dataList id="treinoSelecionadoDL"
-							value="#{alunoTreinoController.treinosCadastro}"
-							emptyMessage="Lista de Treinos Vazia!" var="tre">
-							<f:facet name="header">
+							<p:dataList id="treinoSelecionadoDL"
+								value="#{alunoTreinoController.treinosCadastro}"
+								emptyMessage="Lista de Treinos Vazia!" var="tre">
+								<f:facet name="header">
       							Treino:
         					</f:facet>
-							<p:commandButton process="@this" icon="delete"
-								action="#{alunoTreinoController.removerTreino(tre)}" update="treinoSelecionadoDL"/>
+								<p:commandButton process="@this" icon="delete"
+									action="#{alunoTreinoController.removerTreino(tre)}"
+									update="treinoSelecionadoDL" />
         						#{tre.nome}
     					</p:dataList>
-						<p:commandButton action="#{alunoTreinoController.salvar}" 
-							value="Salvar" update=":alunoTreinoFO"/>
-					</h:panelGrid>
-				</p:tab>
-				<!-- *** CONSULTAR *** -->
-				<p:tab title="Consultar">
-					<h:panelGrid>
-						<p:dataTable id="tableTreino" value="#{alunoTreinoController.alunoTreinos}"
-							var="p" rows="6" emptyMessage="sem registros" paginator="true">
-							<p:column filterBy="#{p.nome}"
-								sortBy="#{p.nome}">
-								<f:facet name="header">
-									<h:outputText value="Nome" />
-								</f:facet>
-								<h:outputText value="#{p.nome}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Validade" />
-								</f:facet>
-								<h:outputText value="#{p.alunosTreinos.get(0).dataFim}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Treino" />
-								</f:facet>
-								<p:dataList value="#{p.alunosTreinos}" var="at">
+							<p:commandButton action="#{alunoTreinoController.salvar}"
+								value="Salvar" update=":alunoTreinoFO :growl" />
+						</h:panelGrid>
+					</p:tab>
+					<!-- *** CONSULTAR *** -->
+					<p:tab title="Consultar">
+						<h:panelGrid>
+							<p:dataTable id="tableTreino"
+								value="#{alunoTreinoController.alunoTreinos}" var="p" rows="6"
+								emptyMessage="sem registros" paginator="true">
+								<p:column filterBy="#{p.nome}" sortBy="#{p.nome}">
+									<f:facet name="header">
+										<h:outputText value="Nome" />
+									</f:facet>
+									<h:outputText value="#{p.nome}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Validade" />
+									</f:facet>
+									<h:outputText value="#{p.alunosTreinos.get(0).dataFim}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Treino" />
+									</f:facet>
+									<p:dataList value="#{p.alunosTreinos}" var="at">
 													#{at.treino.nome}
 								</p:dataList>
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Ações" />
-								</f:facet>
-								<p:commandButton process="@this" icon="delete" update=":alunoTreinoFO"
-									action="#{alunoTreinoController.deletar(p)}" title="Remover" />
-								<p:commandButton process="@this" icon="editar" update=":alunoTreinoFO"
-									action="#{alunoTreinoController.editarAluno(p)}" title="Alterar" />
-							</p:column>
-						</p:dataTable>
-					</h:panelGrid>
-				</p:tab>
-			</p:tabView>
-		</h:form>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Ações" />
+									</f:facet>
+									<div class="alinha_centro">
+										<p:commandButton process="@this" icon="delete"
+											update=":alunoTreinoFO :growl"
+											onstart="if (!confirm(' Deseja realmente excluir?')) return false"
+											action="#{alunoTreinoController.deletar(p)}" title="Remover" />
+										<p:commandButton process="@this" icon="editar"
+											update=":alunoTreinoFO"
+											action="#{alunoTreinoController.editarAluno(p)}"
+											title="Alterar" />
+											<p:commandButton process="@this"
+											action="#{alunoTreinoController.ativarInativar(p.alunosTreinos.get(0))}"
+											title="#{p.alunosTreinos.get(0).ativo ? 'Ativo' : 'Inativo'}"
+											icon="#{p.alunosTreinos.get(0).ativo ? 'ativo' : 'inativo'}" update=":alunoTreinoFO:alunoTreinoTV:tableTreino" />
+									</div>
+								</p:column>
+							</p:dataTable>
+						</h:panelGrid>
+					</p:tab>
+				</p:tabView>
+			</h:form>
 		</p:panel>
 	</ui:define>
 </ui:composition>

@@ -10,4 +10,12 @@ public class MetodologiaDAO extends BaseDAO<Metodologia> {
 		super(Metodologia.class);
 	}
 
+	public int validarConsistenciametodologia(Metodologia metodologia) throws BaseDAOException {
+		return getEm().createQuery("select me from Metodologia me"
+				+ " join me.treinos tr"
+				+ " where me = :_metodologia")
+				.setParameter("_metodologia", metodologia)
+				.getResultList().size();
+	}
+
 }

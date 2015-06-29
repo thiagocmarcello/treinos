@@ -15,7 +15,9 @@
 				<p:tab title="Cadastrar">
 					<h:form>
 						<p:panelGrid columns="2" id="metodologiaPG" styleClass="semBorda">
-							<p:outputLabel value="Nome:" />
+							<h:outputLabel value="Nome:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:inputText id="nomeMetodologia" required="true"
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{metodologiaController.metodologia.nome}" />
@@ -41,10 +43,15 @@
 									<f:facet name="header">
 										<h:outputText value="Ações" />
 									</f:facet>
-									<h:commandButton action="#{metodologiaController.deletar(p)}"
-										value="Remover" />
-									<h:commandButton action="#{metodologiaController.editar(p)}"
-										value="Alterar" />
+									<div class="alinha_centro">
+										<p:commandButton icon="delete"
+											onstart="if (!confirm(' Deseja realmente excluir metodologia? ')) return false"
+											action="#{metodologiaController.deletar(p)}" title="Remover"
+											process="@this" update=":metodologiaTB :growl" />
+										<p:commandButton icon="editar"
+											action="#{metodologiaController.editar(p)}" title="Alterar"
+											process="@form" update=":metodologiaTB" />
+									</div>
 								</p:column>
 							</p:dataTable>
 						</h:form>

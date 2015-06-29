@@ -11,4 +11,11 @@ public class AparelhoDAO extends BaseDAO<Aparelho> {
 		super(Aparelho.class);
 	}
 
+	public int verificarConsistenciaAparelho(Aparelho aparelho) throws BaseDAOException {
+		return getEm().createQuery("select ex from Exercicio ex"
+				+ " where ex.aparelho = :_aparelho")
+				.setParameter("_aparelho", aparelho)
+				.getResultList().size();
+	}
+
 }

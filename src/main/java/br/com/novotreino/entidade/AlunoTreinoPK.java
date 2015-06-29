@@ -22,6 +22,14 @@ public class AlunoTreinoPK implements Serializable {
 		this.treino = treino;
 	}
 
+	public int getAluno() {
+		return aluno;
+	}
+
+	public int getTreino() {
+		return treino;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

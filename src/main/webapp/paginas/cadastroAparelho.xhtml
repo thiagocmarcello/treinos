@@ -15,7 +15,9 @@
 				<p:tab title="Cadastrar">
 					<h:form id="aparelhoFO">
 						<p:panelGrid columns="2" id="aparelhoPG" styleClass="semBorda">
-							<h:outputLabel value="Nome: " />
+							<h:outputLabel value="Nome: ">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:inputText id="nomeAparelho" required="true"
 								requiredMessage="Campo Nome do Aparelho Obrigatório!"
 								value="#{aparelhoController.aparelho.nome}" />
@@ -49,10 +51,15 @@
 									<f:facet name="header">
 										<h:outputText value="Ações" />
 									</f:facet>
-									<p:commandButton action="#{aparelhoController.deletar(p)}"
-										value="Remover" />
-									<p:commandButton action="#{aparelhoController.editar(p)}"
-										value="Alterar" process="@form" update=":aparelhoTB" />
+									<div class="alinha_centro">
+										<p:commandButton icon="delete"
+											action="#{aparelhoController.deletar(p)}"
+											onstart="if (!confirm(' Deseja realmente excluir aparelho? ')) return false"
+											title="Remover" process="@this" update=":aparelhoTB :growl" />
+										<p:commandButton icon="editar"
+											action="#{aparelhoController.editar(p)}" title="Alterar"
+											process="@form" update=":aparelhoTB" />
+									</div>
 								</p:column>
 							</p:dataTable>
 						</h:panelGrid>

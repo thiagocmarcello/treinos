@@ -20,6 +20,7 @@ import br.com.novotreino.servico.AlunoServico;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.CidadeServico;
 import br.com.novotreino.servico.EstadoServico;
+import br.com.novotreino.util.MensagemUtil;
 
 @Named
 @ViewScoped
@@ -56,6 +57,7 @@ public class AlunoController extends BaseController<Aluno> implements
 	public void inicializar() {
 		aluno = new Aluno();
 		aluno.setSexo(true);
+		aluno.setAtivo(true);
 		endereco = new Endereco();
 		carregarAlunos();
 		carregarAcademias();
@@ -66,6 +68,7 @@ public class AlunoController extends BaseController<Aluno> implements
 	private void limpar() {
 		estadoSelecionado = null;
 		cidadeSelecionado = null;
+		academiaSelecionada = null;
 		inicializar();
 	}
 
@@ -118,11 +121,17 @@ public class AlunoController extends BaseController<Aluno> implements
 		try {
 			if (aluno.getId() != null) {
 				aluno = alunoServico.alterar(aluno);
+				MensagemUtil.gerarSucesso("Aluno.", 
+						"Alterado com suceso.");
 			} else {
 				aluno = alunoServico.salvar(aluno);
+				MensagemUtil.gerarSucesso("Aluno.", 
+						"Salvo com suceso.");
 			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
+			MensagemUtil.gerarErro("Aluno.", 
+					"Não foi possivel executar ação..");
 		}
 		limpar();
 		setIndexTab(1);
@@ -190,6 +199,22 @@ public class AlunoController extends BaseController<Aluno> implements
 		Aluno a = (Aluno) obj;
 		try {
 			alunoServico.deletar(a, a.getId());
+			limpar();
+			setIndexTab(1);
+			MensagemUtil.gerarSucesso("Aluno.", 
+					"Deletado com suceso.");
+		} catch (BaseServicoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void ativarInativar(Object obj) {
+		Aluno a = (Aluno) obj;
+		aluno = a;
+		aluno.setAtivo(!aluno.isAtivo());
+		try {
+			alunoServico.alterar(aluno);
 			limpar();
 			setIndexTab(1);
 		} catch (BaseServicoException e) {

@@ -29,6 +29,7 @@ public class Aluno implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column
 	private String nome;
 	
 	@Column
@@ -38,8 +39,10 @@ public class Aluno implements Serializable {
 	@Column(name = "data_nascimento")
 	private Date dataNascimento;
 	
+	@Column
 	private String cpf;
 	
+	@Column
 	private String observacao;
 	
 	@Column(unique = true)

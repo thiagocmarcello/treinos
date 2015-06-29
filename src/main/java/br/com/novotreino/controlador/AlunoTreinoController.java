@@ -19,6 +19,7 @@ import br.com.novotreino.servico.AlunoTreinoServico;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.MetodologiaServico;
 import br.com.novotreino.servico.TreinoServico;
+import br.com.novotreino.util.MensagemUtil;
 
 @Named
 @ViewScoped
@@ -58,6 +59,8 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	@PostConstruct
 	public void inicializar() {
 		treinosCadastro = new ArrayList<Treino>();
+		alunoSelecionado = null;
+		validadeTreino = null;
 		buscarAlunos();
 		buscarMetodologias();
 		buscarAlunosTreinos();
@@ -96,8 +99,26 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	}
 
 	public void adicionarTreino() {
-		treinosCadastro.add(treinoSelecionado);
-		treinoSelecionado = new Treino();
+		inserirTreinoNaLista();
+	}
+
+	private void inserirTreinoNaLista() {
+		if (treinoSelecionado != null) {
+			if (validarTreinoExistente()) {
+				treinosCadastro.add(treinoSelecionado);
+			}
+			treinoSelecionado = null;
+		} else {
+			MensagemUtil.gerarErro("Aluno Treino.", "Selecione um treino.");
+		}
+	}
+
+	private boolean validarTreinoExistente() {
+		if (treinosCadastro.contains(treinoSelecionado)) {
+			MensagemUtil.gerarErro("Aluno Treino.", "Treino já selecionado.");
+			return false;
+		}
+		return true;
 	}
 
 	public void removerTreino(Treino t) {
@@ -109,31 +130,53 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	@Override
 	public String salvar() {
 		try {
-			// FIXME: Passar para a camada de negocio.
-			// É madrugada já e eu não vou refatorar isso pois acordo cedo
-			// pra trabalhar!
-			// Fica pra depois refatorar essa porquisse =(
-			List<AlunoTreino> ats = new ArrayList<AlunoTreino>();
-			for (Treino t : treinosCadastro) {
-				AlunoTreino at = new AlunoTreino(alunoSelecionado, t);
-				at.setDataInicio(new Date());
-				at.setDataFim(validadeTreino);
-				ats.add(at);
-			}
-			alunoSelecionado.setAlunosTreinos(ats);
-			if (editar) {
-				alunoServico.alterar(alunoSelecionado);
+			if (validarTreinosCadastradosPreenchidos()) {
+				// FIXME: Passar para a camada de negocio.
+				// É madrugada já e eu não vou refatorar isso pois acordo cedo
+				// pra trabalhar!
+				// Fica pra depois refatorar essa porquisse =(
+				// validarTreinosCadastrados();
+				List<AlunoTreino> ats = new ArrayList<AlunoTreino>();
+				for (Treino t : treinosCadastro) {
+					AlunoTreino at = new AlunoTreino(alunoSelecionado, t);
+					at.setDataInicio(new Date());
+					at.setDataFim(validadeTreino);
+					at.setAtivo(true);
+					ats.add(at);
+				}
+				alunoSelecionado.setAlunosTreinos(ats);
+				if (editar) {
+					alunoServico.alterar(alunoSelecionado);
+					MensagemUtil.gerarSucesso("Aluno Treino.",
+							"Alterado com sucesso.");
+				} else {
+					alunoServico.alterar(alunoSelecionado);
+					MensagemUtil.gerarSucesso("Aluno Treino.",
+							"Salvo com sucesso.");
+				}
+				inicializar();
+				setIndexTab(1);
+				limparMetodologiaSelecionada();
 			} else {
-				alunoServico.salvar(alunoSelecionado);
+				MensagemUtil
+						.gerarErro("Aluno Treino.", "Sem lista de treinos.");
 			}
-
-			inicializar();
-			setIndexTab(1);
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
-		setIndexTab(1);
 		return null;
+	}
+
+	private boolean validarTreinosCadastradosPreenchidos() {
+		if (treinosCadastro.isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private void limparMetodologiaSelecionada() {
+		metodologiaSelecionada = null;
 	}
 
 	@Override
@@ -143,6 +186,8 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 		try {
 			alunoTreinoServico.deletarAlunosTreinos(alunosTreinos);
 			inicializar();
+			setIndexTab(1);
+			MensagemUtil.gerarErro("Aluno Treino.", "Excluido com sucesso.");
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
@@ -157,6 +202,7 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	public void editarAluno(Object k) {
 		Aluno aluno = (Aluno) k;
 		alunoSelecionado = aluno;
+		metodologiaSelecionada = metodologias.get(0);
 		for (AlunoTreino at : aluno.getAlunosTreinos()) {
 			if (treinosCadastro == null) {
 				treinosCadastro = new ArrayList<Treino>();
@@ -166,6 +212,18 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 		}
 		editar = true;
 		setIndexTab(0);
+	}
+
+	public void ativarInativar(Object obj) {
+		AlunoTreino a = (AlunoTreino) obj;
+		a.setAtivo(!a.isAtivo());
+		try {
+			alunoTreinoServico.ativarInativarAlunosTreinos(a);
+			setIndexTab(1);
+		} catch (BaseServicoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -10,4 +10,12 @@ public class AcademiaDAO extends BaseDAO<Academia> {
 		super(Academia.class);
 	}
 
+	public int verificarConsistenciaAcademiaAluno(Academia academia) throws BaseDAOException {
+		return getEm().createQuery("select ac from Academia ac"
+				+ " join ac.alunos al"
+				+ " where ac = :_academia")
+				.setParameter("_academia", academia)
+				.getResultList().size();
+	}
+
 }

@@ -64,4 +64,20 @@ public class AlunoTreinoServico extends BaseServico<AlunoTreino> {
 			alunoTreinoDAO.deletarAlunosTreinos(at);
 		}
 	}
+
+	public void ativarInativarAlunosTreinos(AlunoTreino alunoTreino)
+			throws BaseServicoException {
+			alunoTreinoDAO.ativarInativarAlunosTreinos(alunoTreino.isAtivo(), alunoTreino);
+	}
+	
+	public boolean validarTreinoCadastroJaExiste(AlunoTreino alunoTreinoExiste)
+			throws BaseServicoException {
+		int resultado = alunoTreinoDAO
+				.verificarSeAlunoTreinoJaExiste(alunoTreinoExiste);
+		if (resultado > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

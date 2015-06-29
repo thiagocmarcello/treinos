@@ -9,26 +9,36 @@
 
 <ui:composition template="../tamplate/template.xhtml">
 	<ui:define name="content">
-		<p:panel header="Aluno">
+		<p:panel header="Aluno" id="alunoPA">
 			<p:tabView id="alunoTB" activeIndex="#{alunoController.indexTab}"
 				styleClass="sem-bordas">
 				<p:tab title="Cadastrar">
-					<h:form>
+					<h:form id="cadastrarFO">
 						<p:panelGrid columns="2" styleClass="semBorda">
 
-							<h:outputLabel value="Nome: " />
+							<h:outputLabel value="Nome: ">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:inputText id="nomeUsuario" required="true"
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{alunoController.aluno.nome}" />
 
-							<h:outputLabel value="CPF: " />
+							<h:outputLabel value="CPF: ">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:inputText value="#{alunoController.aluno.cpf}" required="true"
-								name="cpf" requiredMessage="Campo CPF obrigatório!" />
+								name="cpf" requiredMessage="Campo CPF obrigatório!">
+								<f:validator validatorId="cpfValidator" />
+							</p:inputText>
 
-							<h:outputLabel value="Email: " />
+							<h:outputLabel value="Email:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:inputText value="#{alunoController.aluno.email}"
 								required="true" name="email"
-								requiredMessage="Campo Email obrigatório!" />
+								requiredMessage="Campo Email obrigatório!">
+								<f:validator validatorId="emailValidator" />
+							</p:inputText>
 
 							<h:outputLabel value="Rua: " />
 							<p:inputText value="#{alunoController.endereco.rua}" />
@@ -42,8 +52,11 @@
 							<h:outputLabel value="Bairro: " />
 							<p:inputText value="#{alunoController.endereco.bairro}" />
 
-							<h:outputLabel value="Telefone: " />
+							<h:outputLabel value="Telefone: ">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:inputText value="#{alunoController.endereco.telefone01}"
+								required="true" requiredMessage="Campo Nome obrigatório!"
 								name="telefone" onkeyup="mascara( this, mtel );" maxlength="15" />
 
 							<h:outputLabel value=" Celular: " />
@@ -53,20 +66,26 @@
 							<h:outputLabel value=" Sexo: " />
 							<h:selectOneRadio value="#{alunoController.aluno.sexo}">
 								<f:selectItem itemValue="true" itemLabel="Masculino" />
-								<f:selectItem itemValue="false" itemLabel="Feminino" />
+								<f:selectItem itemValue="false" itemLabel="Femenino" />
 							</h:selectOneRadio>
 
-							<h:outputText value="Nascimento:" />
+							<h:outputLabel value="Nascimento:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:calendar locale="de" navigator="true" yearRange="1950"
-								value="#{alunoController.aluno.dataNascimento}">
+								required="true" requiredMessage="Selecione data de nascimento."
+								maxdate="today" value="#{alunoController.aluno.dataNascimento}">
 								<p:ajax />
 							</p:calendar>
 
 							<h:outputLabel value=" Observações " />
 							<h:inputTextarea value="#{alunoController.aluno.observacao}" />
 
-							<h:outputText value="Academia:" />
-							<p:selectOneMenu id="academiaSOM"
+							<h:outputLabel value="Academia:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
+							<p:selectOneMenu id="academiaSOM" required="true"
+								requiredMessage="Selecione a academia."
 								value="#{alunoController.academiaSelecionada}"
 								converter="academiaConverter">
 								<f:selectItem itemLabel="Selecione..." itemValue="0" />
@@ -75,8 +94,11 @@
 								<p:ajax />
 							</p:selectOneMenu>
 
-							<h:outputText value="Estado:" />
-							<p:selectOneMenu id="idEstado"
+							<h:outputLabel value="Estado:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
+							<p:selectOneMenu id="idEstado" required="true"
+								requiredMessage="Selecione o estado."
 								value="#{alunoController.estadoSelecionado}">
 								<f:selectItem itemLabel="Selecione..." itemValue="#{null}" />
 								<f:selectItems value="#{alunoController.estados}" var="estado"
@@ -85,12 +107,17 @@
 									listener="#{alunoController.carregarCidades()}" />
 							</p:selectOneMenu>
 
-							<h:outputText value="Cidade:" />
+							<h:outputLabel value="Cidade:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:selectOneMenu id="idCidade"
+								disabled="#{alunoController.estadoSelecionado eq null}"
+								required="true" requiredMessage="Selecione a cidade."
 								value="#{alunoController.cidadeSelecionado}">
-								<f:selectItem itemLabel="Selecione..." itemValue="0" />
+								<f:selectItem itemLabel="Selecione..." itemValue="#{null}" />
 								<f:selectItems value="#{alunoController.cidades}" var="cidade"
 									itemValue="#{cidade.value}" itemLabel="#{cidade.label}" />
+								<f:ajax />
 							</p:selectOneMenu>
 
 							<p:commandButton action="#{alunoController.salvar}"
@@ -100,7 +127,7 @@
 				</p:tab>
 				<!-- *** CONSULTAR *** -->
 				<p:tab title="Consultar">
-					<h:form>
+					<h:form id="consultarFO">
 						<h:panelGrid>
 							<p:dataTable id="tablePessoa" value="#{alunoController.alunos}"
 								var="p" rows="6" emptyMessage="sem registros" paginator="true">
@@ -116,7 +143,19 @@
 									</f:facet>
 									<h:outputText value="#{p.email}" />
 								</p:column>
-								<p:column sortBy="#{p.academia.nome}">
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Observação" />
+									</f:facet>
+									<h:outputText value="#{p.observacao}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Telefone" />
+									</f:facet>
+									<h:outputText value="#{p.endereco.telefone01}" />
+								</p:column>
+								<p:column>
 									<f:facet name="header">
 										<h:outputText value="Academia" />
 									</f:facet>
@@ -126,10 +165,19 @@
 									<f:facet name="header">
 										<h:outputText value="Ações" />
 									</f:facet>
-									<h:commandButton action="#{alunoController.deletar(p)}"
-										value="Remover" />
-									<h:commandButton action="#{alunoController.editar(p)}"
-										value="Alterar" />
+									<div class="alinha_centro">
+										<p:commandButton process="@this" icon="delete"
+											onstart="if (!confirm(' Deseja realmente excluir aluno?')) return false"
+											action="#{alunoController.deletar(p)}"
+											update=":alunoPA :growl" title="Remover" />
+										<p:commandButton process="@this" icon="editar"
+											action="#{alunoController.editar(p)}" update=":alunoPA"
+											title="Alterar" />
+										<p:commandButton process="@this"
+											action="#{alunoController.ativarInativar(p)}"
+											title="#{p.ativo ? 'Ativo' : 'Inativo'}"
+											icon="#{p.ativo ? 'ativo' : 'inativo'}" update=":alunoPA" />
+									</div>
 								</p:column>
 							</p:dataTable>
 						</h:panelGrid>

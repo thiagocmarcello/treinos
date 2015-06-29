@@ -9,18 +9,25 @@
 
 <ui:composition template="../tamplate/template.xhtml">
 	<ui:define name="content">
-		<p:panel header="Academia">
+		<p:panel header="Academia" id="academiaPA">
 			<p:tabView id="academiaTB"
 				activeIndex="#{academiaController.indexTab}" styleClass="sem-bordas">
 				<p:tab title="Cadastrar">
 					<h:form>
 						<p:panelGrid columns="2" id="personalPG" styleClass="semBorda">
-							<p:outputLabel value="Nome:" />
+							<h:outputLabel value="Nome:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:inputText id="nomeAcademia" required="true"
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{academiaController.academia.nome}" />
-							<p:outputLabel value="CNPJ:" />
-							<p:inputText value="#{academiaController.academia.cnpj}" />
+							<h:outputLabel value="CNPJ:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
+							<p:inputText value="#{academiaController.academia.cnpj}"
+								required="true" requiredMessage="Campo CNPJ obrigatório!">
+								<f:validator validatorId="cnpjValidator" />
+							</p:inputText>
 							<p:outputLabel value="Rua:" />
 							<p:inputText value="#{academiaController.endereco.rua}" />
 							<p:outputLabel value="Numero: " />
@@ -29,14 +36,19 @@
 							<p:inputText value="#{academiaController.endereco.complemento}" />
 							<p:outputLabel value="Bairro:" />
 							<p:inputText value="#{academiaController.endereco.bairro}" />
-							<p:outputLabel value="Telefone:" />
+							<h:outputLabel value="Telefone:">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
 							<p:inputText value="#{academiaController.endereco.telefone01}"
+								required="true" requiredMessage="Campo Nome obrigatório!"
 								name="telefone" onkeyup="mascara( this, mtel );" maxlength="15" />
 							<p:outputLabel value=" Celular:" />
 							<p:inputText value="#{academiaController.endereco.celular}"
 								name="celular" onkeyup="mascara(this, mtel);" maxlength="15" />
-							<p:outputLabel value="Estado:" />
-							<p:selectOneMenu id="idEstado"
+
+							<h:outputLabel value="Estado:" > <span class="texto_vermelho">*</span> </h:outputLabel>
+							<p:selectOneMenu id="idEstado" required="true"
+								requiredMessage="Campo Estado obrigatório!"
 								value="#{academiaController.estadoSelecionado}">
 								<f:selectItem itemLabel="Selecione..." />
 								<f:selectItems value="#{academiaController.estados}"
@@ -45,8 +57,11 @@
 								<p:ajax update="idCidade" event="change"
 									listener="#{academiaController.carregarCidades()}" />
 							</p:selectOneMenu>
-							<p:outputLabel value="Cidade:" />
-							<p:selectOneMenu id="idCidade"
+
+							<h:outputLabel value="Cidade:" > <span class="texto_vermelho">*</span> </h:outputLabel>
+							<p:selectOneMenu id="idCidade" required="true"
+								requiredMessage="Campo Cidade obrigatório!"
+								disabled="#{academiaController.estadoSelecionado eq null}"
 								value="#{academiaController.cidadeSelecionado}">
 								<f:selectItem itemLabel="Selecione..." />
 								<f:selectItems value="#{academiaController.cidades}"
@@ -73,13 +88,31 @@
 								</p:column>
 								<p:column>
 									<f:facet name="header">
+										<h:outputText value="CNPJ" />
+									</f:facet>
+									<h:outputText value="#{p.cnpj}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Telefone" />
+									</f:facet>
+									<h:outputText value="#{p.endereco.telefone01}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
 										<h:outputText value="Ações" />
 									</f:facet>
-									<h:commandButton action="#{academiaController.deletar(p)}"
-										value="Remover" />
-									<h:commandButton action="#{academiaController.editar(p)}"
-										value="Alterar" />
+									<div class="alinha_centro">
+									<p:commandButton process="@this" icon="delete"
+									onstart="if (!confirm(' Deseja realmente excluir academia?')) return false"
+										action="#{academiaController.deletar(p)}"
+										update=":academiaPA :growl" title="Remover" />
+									<p:commandButton process="@this" icon="editar"
+										action="#{academiaController.editar(p)}" update=":academiaPA"
+										title="Alterar" />
+										</div>
 								</p:column>
+
 							</p:dataTable>
 						</h:form>
 					</h:panelGrid>

@@ -14,6 +14,7 @@ import br.com.novotreino.entidade.Aparelho;
 import br.com.novotreino.servico.AcademiaServico;
 import br.com.novotreino.servico.AparelhoServico;
 import br.com.novotreino.servico.BaseServicoException;
+import br.com.novotreino.util.MensagemUtil;
 
 @Named
 @ViewScoped
@@ -69,8 +70,12 @@ public class AparelhoController extends BaseController<Aparelho> implements
 		try {
 			if ("".equals(aparelho.getId()) || aparelho.getId() == null) {
 				aparelho = aparelhoServico.salvar(aparelho);
+				MensagemUtil.gerarSucesso("Aparelho.", 
+						"Salvo com suceso.");
 			} else {
 				aparelho = aparelhoServico.alterar(aparelho);
+				MensagemUtil.gerarSucesso("Aparelho.", 
+						"Alterado com suceso.");
 			}
 			inicializar();
 			setIndexTab(1);
@@ -85,10 +90,17 @@ public class AparelhoController extends BaseController<Aparelho> implements
 	public void deletar(Object obj) {
 		Aparelho a = (Aparelho) obj;
 		try {
-			aparelhoServico.deletar(a, a.getId());
+			boolean deletado = aparelhoServico.deletar(a);
 			limparCampos();
 			buscarAparelhos();
 			setIndexTab(1);
+			if (deletado) {
+				MensagemUtil.gerarSucesso("Aparelho.", 
+						"Deletado com suceso.");
+				} else {
+					MensagemUtil.gerarErro("Aparelho.",
+							"Existem treinos associados a este aparelho.");
+				}
 		} catch (BaseServicoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -18,6 +19,7 @@ import br.com.novotreino.servico.AparelhoServico;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.MetodologiaServico;
 import br.com.novotreino.servico.TreinoServico;
+import br.com.novotreino.util.MensagemUtil;
 
 @Named
 @ViewScoped
@@ -83,10 +85,14 @@ public class TreinoController extends BaseController<Treino> implements
 	}
 
 	public void adicionarExercicio() {
-		exercicio.setAparelho(aparelhoSelecionado);
-		exercicios.add(exercicio);
-		setIndexTab(0);
-		limparCampos();
+		if (aparelhoSelecionado != null) {
+			exercicio.setAparelho(aparelhoSelecionado);
+			exercicios.add(exercicio);
+			setIndexTab(0);
+			limparCampos();
+		} else {
+			MensagemUtil.gerarErro("Treino.", "Selecione o aparelho.");
+		}
 	}
 
 	public void removerExercicio(Exercicio ex) {
@@ -100,21 +106,37 @@ public class TreinoController extends BaseController<Treino> implements
 
 	@Override
 	public String salvar() {
-		treino.setExercicios(exercicios);
-		treino.setMetodologia(metodologiaSelecionada);
-		try {
-			if (treino.getId() == null) {
-				treinoServico.salvar(treino);
-			} else {
-				treinoServico.alterar(treino);
-				setIndexTab(1);
+		if (validarTreino()) {
+			treino.setExercicios(exercicios);
+			treino.setMetodologia(metodologiaSelecionada);
+			try {
+				if (treino.getId() == null) {
+					treinoServico.salvar(treino);
+					MensagemUtil.gerarSucesso("Treino.", "Salvo com suceso.");
+				} else {
+					treinoServico.alterar(treino);
+					setIndexTab(1);
+					MensagemUtil
+							.gerarSucesso("Treino.", "Alterado com suceso.");
+				}
+			} catch (ValidatorException e) {
+			} catch (BaseServicoException e) {
+				e.printStackTrace();
 			}
-		} catch (BaseServicoException e) {
-			e.printStackTrace();
+			inicializar();
+			setIndexTab(1);
+		} else {
+			MensagemUtil.gerarErro("Treino.", "Treino sem exercicios.");
 		}
-		inicializar();
-		setIndexTab(1);
 		return null;
+	}
+
+	private boolean validarTreino() throws ValidatorException {
+		if (exercicios == null || exercicios.isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	@Override
@@ -124,6 +146,8 @@ public class TreinoController extends BaseController<Treino> implements
 			treinoServico.deletar(t, t.getId());
 			inicializar();
 			setIndexTab(1);
+			MensagemUtil
+			.gerarSucesso("Treino.", "Excluido com suceso.");
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}

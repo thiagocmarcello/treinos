@@ -18,6 +18,7 @@ import br.com.novotreino.servico.AcademiaServico;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.CidadeServico;
 import br.com.novotreino.servico.EstadoServico;
+import br.com.novotreino.util.MensagemUtil;
 
 @Named
 @ViewScoped
@@ -73,8 +74,12 @@ public class AcademiaController extends BaseController<Academia> implements
 		try {
 			if (academia.getId() != null) {
 				academiaServico.alterar(academia);
+				MensagemUtil.gerarSucesso("Academia.", 
+						"Alterado com suceso.");
 			} else {
 				academiaServico.salvar(academia);
+				MensagemUtil.gerarSucesso("Academia.", 
+						"Salvo com suceso.");
 			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
@@ -90,9 +95,16 @@ public class AcademiaController extends BaseController<Academia> implements
 	public void deletar(Object obj) {
 		Academia a = (Academia) obj;
 		try {
-			academiaServico.deletar(a, a.getId());
+			boolean deletado = academiaServico.deletar(a);
 			limpar();
 			setIndexTab(1);
+			if (deletado) {
+			MensagemUtil.gerarSucesso("Academia.", 
+					"Deletado com suceso.");
+			} else {
+				MensagemUtil.gerarErro("Academia.",
+						"Existem alunos associados a esta academia.");
+			}
 		} catch (BaseServicoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

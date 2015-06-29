@@ -11,6 +11,7 @@ import javax.inject.Named;
 import br.com.novotreino.entidade.Metodologia;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.MetodologiaServico;
+import br.com.novotreino.util.MensagemUtil;
 
 @Named
 @ViewScoped
@@ -51,8 +52,12 @@ public class MetodologiaController extends BaseController<Metodologia>
 		try {
 			if (metodologia.getId() != null) {
 				metodologiaServico.alterar(metodologia);
+				MensagemUtil.gerarSucesso("Metodologia.", 
+						"Alterado com suceso.");
 			} else {
 				metodologiaServico.salvar(metodologia);
+				MensagemUtil.gerarSucesso("Metodologia.", 
+						"Salvo com suceso.");
 			}
 			setIndexTab(1);
 		} catch (BaseServicoException e) {
@@ -67,9 +72,16 @@ public class MetodologiaController extends BaseController<Metodologia>
 	public void deletar(Object obj) {
 		Metodologia a = (Metodologia) obj;
 		try {
-			metodologiaServico.deletar(a, a.getId());
+			boolean deletar = metodologiaServico.deletar(a);
 			inicializar();
 			setIndexTab(1);
+			if (deletar) {
+				MensagemUtil.gerarSucesso("Metodologia.", 
+						"Deletado com suceso.");
+			} else {
+				MensagemUtil.gerarErro("Metodologia.", 
+						"Existem treinos associados a essa metodologia.");
+			}
 		} catch (BaseServicoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

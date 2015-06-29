@@ -16,12 +16,18 @@
 					<p:tab title="Cadastrar">
 						<h:panelGrid columns="2">
 
-							<h:outputLabel value="Nome: " />
-							<h:inputText id="nomeTreino"
+							<h:outputLabel value="Nome: ">
+								<span class="texto_vermelho">*</span>
+							</h:outputLabel>
+							<p:inputText id="nomeTreino" required="true"
+								requiredMessage="Campo Nome obrigatório!"
 								value="#{treinoController.treino.nome}" />
 
-							<h:outputText value="Metodologia:" />
+							<h:outputLabel value="Metodologia:" >
+								<span class="texto_vermelho">*</span></h:outputLabel>
 							<p:selectOneMenu id="metodologiaSOM"
+							required="true"
+								requiredMessage="Campo Metodologia obrigatório!"
 								value="#{treinoController.metodologiaSelecionada}"
 								converter="converterMetodologia">
 								<f:selectItem itemLabel="Selecione..." itemValue="0" />
@@ -30,7 +36,7 @@
 								<p:ajax />
 							</p:selectOneMenu>
 
-							<h:outputText value="Aparelho:" />
+							<h:outputLabel value="Aparelho:" />
 							<p:selectOneMenu id="idTreino"
 								value="#{treinoController.aparelhoSelecionado}"
 								converter="converterAparelho">
@@ -41,20 +47,24 @@
 							</p:selectOneMenu>
 
 							<h:outputLabel value="Sequencia: " />
-							<h:inputText id="sequencia"
-								value="#{treinoController.exercicio.sequencia}">
+							<p:inputText id="sequencia" maxlength="2" size="5" 
+								value="#{treinoController.exercicio.sequencia}" 
+								onkeypress="return somenteNumero(event);" >
 								<f:ajax />
-							</h:inputText>
+							</p:inputText>
 
 							<h:outputLabel id="repeticao" value="Repetição: " />
-							<h:inputText value="#{treinoController.exercicio.repeticao}">
+							<p:inputText value="#{treinoController.exercicio.repeticao}" 
+							maxlength="2" size="5" 
+							onkeypress="return somenteNumero(event);">
 								<f:ajax />
-							</h:inputText>
+							</p:inputText>
 
 							<p:commandButton
 								action="#{treinoController.adicionarExercicio()}"
-								value="Adicionar Aparelho" process="@this, nomeTreino"
-								update=":aparelhoFO">
+								icon="add"
+								title="Adicionar Aparelho" process="@this, nomeTreino"
+								update=":aparelhoFO :growl">
 							</p:commandButton>
 
 							<p:dataList id="idListaAparelhos"
@@ -69,7 +79,7 @@
         						#{aparelho.aparelho.nome}, #{aparelho.sequencia}x de #{aparelho.repeticao}
     					</p:dataList>
 							<p:commandButton action="#{treinoController.salvar}"
-								update=":aparelhoFO" value="Salvar" />
+								update=":aparelhoFO :growl" value="Salvar" />
 						</h:panelGrid>
 					</p:tab>
 					<!-- *** CONSULTAR *** -->
@@ -83,8 +93,7 @@
 									</f:facet>
 									<h:outputText value="#{p.nome}" />
 								</p:column>
-								<p:column filterBy="#{p.metodologia.nome}"
-									sortBy="#{p.metodologia.nome}">
+								<p:column>
 									<f:facet name="header">
 										<h:outputText value="Metodologia" />
 									</f:facet>
@@ -102,12 +111,15 @@
 									<f:facet name="header">
 										<h:outputText value="Ações" />
 									</f:facet>
-									<p:commandButton process="@this" icon="delete"
-										action="#{treinoController.deletar(p)}"
-										update=":aparelhoFO:aparelhoTV" title="Remover" />
-									<p:commandButton process="@this" icon="editar"
-										update=":aparelhoFO" action="#{treinoController.editar(p)}"
-										title="Alterar" />
+									<div class="alinha_centro">
+										<p:commandButton process="@this" icon="delete"
+											onstart="if (!confirm(' Deseja realmente excluir treino')) return false"
+											action="#{treinoController.deletar(p)}"
+											update=":aparelhoFO:aparelhoTV :growl" title="Remover" />
+										<p:commandButton process="@this" icon="editar"
+											update=":aparelhoFO" action="#{treinoController.editar(p)}"
+											title="Alterar" />
+									</div>
 								</p:column>
 							</p:dataTable>
 						</h:panelGrid>

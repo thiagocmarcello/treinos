@@ -16,10 +16,17 @@ public class TreinoDAO extends BaseDAO<Treino> {
 	public List<Treino> obterPorMetodologia(Metodologia metodologia)
 			throws BaseDAOException {
 		return getEm()
-				.createQuery("select t from Treino t"
-						+ " where t.metodologia = :_metodologia")
-				.setParameter("_metodologia", metodologia)
-				.getResultList();
+				.createQuery(
+						"select t from Treino t"
+								+ " where t.metodologia = :_metodologia")
+				.setParameter("_metodologia", metodologia).getResultList();
 	}
 
+	public int validarExclusao(Treino treino) throws BaseDAOException {
+		return getEm()
+				.createQuery(
+						"select altr from AlunoTreino altr"
+								+ " where altr.treino = :_treino")
+				.setParameter("_treino", treino).getResultList().size();
+	}
 }

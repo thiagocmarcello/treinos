@@ -25,6 +25,8 @@
 								<span class="texto_vermelho">*</span>
 							</h:outputLabel>
 							<p:inputText value="#{academiaController.academia.cnpj}"
+							onkeypress="return somenteNumero(event);"
+								maxlength="14"
 								required="true" requiredMessage="Campo CNPJ obrigatório!">
 								<f:validator validatorId="cnpjValidator" />
 							</p:inputText>

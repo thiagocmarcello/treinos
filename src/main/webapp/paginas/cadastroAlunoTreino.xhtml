@@ -109,7 +109,9 @@
 									<f:facet name="header">
 										<h:outputText value="Validade" />
 									</f:facet>
-									<h:outputText value="#{p.alunosTreinos.get(0).dataFim}" />
+									<h:outputText value="#{p.alunosTreinos.get(0).dataFim}" >
+									<f:convertDateTime pattern="dd/MM/yyyy"/>  
+									</h:outputText>
 								</p:column>
 								<p:column>
 									<f:facet name="header">

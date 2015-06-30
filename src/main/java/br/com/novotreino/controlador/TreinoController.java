@@ -143,11 +143,14 @@ public class TreinoController extends BaseController<Treino> implements
 	public void deletar(Object obj) {
 		Treino t = (Treino) obj;
 		try {
-			treinoServico.deletar(t, t.getId());
-			inicializar();
+			boolean deletado = treinoServico.deletar(t);
+			if (deletado) {
+				inicializar();
+				MensagemUtil.gerarSucesso("Treino.", "Excluido com suceso.");
+			} else {
+				MensagemUtil.gerarErro("Treino.", "Este treino esta sendo ultilizado por Aluno.");
+			}
 			setIndexTab(1);
-			MensagemUtil
-			.gerarSucesso("Treino.", "Excluido com suceso.");
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}

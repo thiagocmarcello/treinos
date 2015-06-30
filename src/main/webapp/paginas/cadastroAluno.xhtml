@@ -27,6 +27,8 @@
 								<span class="texto_vermelho">*</span>
 							</h:outputLabel>
 							<p:inputText value="#{alunoController.aluno.cpf}" required="true"
+							onkeypress="return somenteNumero(event);"
+								maxlength="11"
 								name="cpf" requiredMessage="Campo CPF obrigatório!">
 								<f:validator validatorId="cpfValidator" />
 							</p:inputText>

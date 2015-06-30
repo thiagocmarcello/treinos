@@ -187,7 +187,7 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 			alunoTreinoServico.deletarAlunosTreinos(alunosTreinos);
 			inicializar();
 			setIndexTab(1);
-			MensagemUtil.gerarErro("Aluno Treino.", "Excluido com sucesso.");
+			MensagemUtil.gerarSucesso("Aluno Treino.", "Excluido com sucesso.");
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}

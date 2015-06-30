@@ -96,7 +96,7 @@ public class AparelhoController extends BaseController<Aparelho> implements
 			setIndexTab(1);
 			if (deletado) {
 				MensagemUtil.gerarSucesso("Aparelho.", 
-						"Deletado com suceso.");
+						"Excluido com suceso.");
 				} else {
 					MensagemUtil.gerarErro("Aparelho.",
 							"Existem treinos associados a este aparelho.");
@@ -105,7 +105,6 @@ public class AparelhoController extends BaseController<Aparelho> implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override

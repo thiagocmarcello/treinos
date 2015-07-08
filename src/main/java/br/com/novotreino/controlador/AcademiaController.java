@@ -74,20 +74,18 @@ public class AcademiaController extends BaseController<Academia> implements
 		try {
 			if (academia.getId() != null) {
 				academiaServico.alterar(academia);
-				MensagemUtil.gerarSucesso("Academia.", 
-						"Alterado com suceso.");
+				MensagemUtil.gerarSucesso("Academia.", "Alterado com suceso.");
 			} else {
 				academiaServico.salvar(academia);
-				MensagemUtil.gerarSucesso("Academia.", 
-						"Salvo com suceso.");
+				MensagemUtil.gerarSucesso("Academia.", "Salvo com suceso.");
 			}
+			setIndexTab(1);
 		} catch (BaseServicoException e) {
-			e.printStackTrace();
+			MensagemUtil.gerarErro("Academia.", "Academia já existente.");
 		}
 		List<Academia> academiass = new ArrayList<Academia>();
 		academiass.add(academia);
 		limpar();
-		setIndexTab(1);
 		return "";
 	}
 
@@ -99,8 +97,7 @@ public class AcademiaController extends BaseController<Academia> implements
 			limpar();
 			setIndexTab(1);
 			if (deletado) {
-			MensagemUtil.gerarSucesso("Academia.", 
-					"Deletado com suceso.");
+				MensagemUtil.gerarSucesso("Academia.", "Excluido com suceso.");
 			} else {
 				MensagemUtil.gerarErro("Academia.",
 						"Existem alunos associados a esta academia.");

@@ -16,27 +16,20 @@
 					<h:form id="cadastrarFO">
 						<p:panelGrid columns="2" styleClass="semBorda">
 
-							<h:outputLabel value="Nome: ">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="nomeUsuario" value="Nome" />
 							<p:inputText id="nomeUsuario" required="true"
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{alunoController.aluno.nome}" />
 
-							<h:outputLabel value="CPF: ">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
-							<p:inputText value="#{alunoController.aluno.cpf}" required="true"
-							onkeypress="return somenteNumero(event);"
-								maxlength="11"
+							<p:outputLabel for="cpf" value="CPF" />
+							<p:inputText id="cpf" value="#{alunoController.aluno.cpf}" required="true"
+								onkeypress="return somenteNumero(event);" maxlength="11"
 								name="cpf" requiredMessage="Campo CPF obrigatório!">
 								<f:validator validatorId="cpfValidator" />
 							</p:inputText>
 
-							<h:outputLabel value="Email:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
-							<p:inputText value="#{alunoController.aluno.email}"
+							<p:outputLabel for="email" value="E-mail" />
+							<p:inputText id="email" value="#{alunoController.aluno.email}"
 								required="true" name="email"
 								requiredMessage="Campo Email obrigatório!">
 								<f:validator validatorId="emailValidator" />
@@ -54,11 +47,9 @@
 							<h:outputLabel value="Bairro: " />
 							<p:inputText value="#{alunoController.endereco.bairro}" />
 
-							<h:outputLabel value="Telefone: ">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
-							<p:inputText value="#{alunoController.endereco.telefone01}"
-								required="true" requiredMessage="Campo Nome obrigatório!"
+							<p:outputLabel for="telefone" value="Nome" />
+							<p:inputText id="telefone" value="#{alunoController.endereco.telefone01}"
+								required="true" requiredMessage="Campo Telefone obrigatório!"
 								name="telefone" onkeyup="mascara( this, mtel );" maxlength="15" />
 
 							<h:outputLabel value=" Celular: " />
@@ -71,21 +62,18 @@
 								<f:selectItem itemValue="false" itemLabel="Femenino" />
 							</h:selectOneRadio>
 
-							<h:outputLabel value="Nascimento:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
-							<p:calendar locale="de" navigator="true" yearRange="1950"
-								required="true" requiredMessage="Selecione data de nascimento."
-								maxdate="today" value="#{alunoController.aluno.dataNascimento}">
+							<p:outputLabel for="nascimento" value="Nascimento" />
+							<p:calendar id="nascimento" locale="de" navigator="true"
+								yearRange="1950" required="true" mode="inline"
+								requiredMessage="Selecione data de nascimento." maxdate="today"
+								value="#{alunoController.aluno.dataNascimento}">
 								<p:ajax />
 							</p:calendar>
 
 							<h:outputLabel value=" Observações " />
 							<h:inputTextarea value="#{alunoController.aluno.observacao}" />
 
-							<h:outputLabel value="Academia:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="academiaSOM" value="Academia" />
 							<p:selectOneMenu id="academiaSOM" required="true"
 								requiredMessage="Selecione a academia."
 								value="#{alunoController.academiaSelecionada}"
@@ -96,9 +84,7 @@
 								<p:ajax />
 							</p:selectOneMenu>
 
-							<h:outputLabel value="Estado:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="idEstado" value="Estado" />
 							<p:selectOneMenu id="idEstado" required="true"
 								requiredMessage="Selecione o estado."
 								value="#{alunoController.estadoSelecionado}">
@@ -109,9 +95,7 @@
 									listener="#{alunoController.carregarCidades()}" />
 							</p:selectOneMenu>
 
-							<h:outputLabel value="Cidade:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="idCidade" value="Cidade" />
 							<p:selectOneMenu id="idCidade"
 								disabled="#{alunoController.estadoSelecionado eq null}"
 								required="true" requiredMessage="Selecione a cidade."

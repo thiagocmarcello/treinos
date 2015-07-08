@@ -80,8 +80,8 @@ public class AparelhoController extends BaseController<Aparelho> implements
 			inicializar();
 			setIndexTab(1);
 		} catch (BaseServicoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MensagemUtil.gerarErro("Aparelho.", 
+					"Já existe aparelho cadastrado.");
 		}
 		return null;
 	}

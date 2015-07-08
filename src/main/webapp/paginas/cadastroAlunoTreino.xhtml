@@ -17,9 +17,7 @@
 					<p:tab title="Cadastrar">
 						<h:panelGrid columns="2">
 
-							<h:outputLabel value="Aluno:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="alunoSOM" value="Aluno" />
 							<p:selectOneMenu id="alunoSOM" required="true"
 								requiredMessage="Campo Aluno obrigatório!"
 								value="#{alunoTreinoController.alunoSelecionado}"
@@ -30,9 +28,7 @@
 								<p:ajax />
 							</p:selectOneMenu>
 
-							<h:outputLabel value="Validade:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="inline" value="Validade" />
 							<p:calendar required="true"
 								requiredMessage="Campo Validade obrigatório!" id="inline"
 								value="#{alunoTreinoController.validadeTreino}" mode="inline"
@@ -40,9 +36,7 @@
 								<p:ajax />
 							</p:calendar>
 
-							<h:outputLabel value="Metodologia:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="metodologiaSOM" value="Metodologia" />
 							<p:selectOneMenu id="metodologiaSOM" required="true"
 								requiredMessage="Campo Metodologia obrigatório!"
 								value="#{alunoTreinoController.metodologiaSelecionada}"

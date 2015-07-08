@@ -61,8 +61,8 @@ public class MetodologiaController extends BaseController<Metodologia>
 			}
 			setIndexTab(1);
 		} catch (BaseServicoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MensagemUtil.gerarErro("Metodologia.", 
+					"Já existe metodologia cadastrada.");
 		}
 		inicializar();
 		return null;

@@ -15,7 +15,7 @@ public class StringTrimConverter implements Serializable, Converter {
 	public Object getAsObject(FacesContext context, UIComponent cmp,
 			String value) {
 		if (value != null && cmp instanceof HtmlInputText) {
-			return value.trim();
+			return value.toUpperCase().trim();
 		}
 		return value;
 	}

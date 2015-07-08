@@ -10,6 +10,8 @@ import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Aluno;
 import br.com.novotreino.entidade.Cidade;
@@ -128,13 +130,12 @@ public class AlunoController extends BaseController<Aluno> implements
 				MensagemUtil.gerarSucesso("Aluno.", 
 						"Salvo com suceso.");
 			}
+			setIndexTab(1);
 		} catch (BaseServicoException e) {
-			e.printStackTrace();
 			MensagemUtil.gerarErro("Aluno.", 
-					"Não foi possivel executar ação..");
+					"Email já cadastrado.");
 		}
 		limpar();
-		setIndexTab(1);
 		return null;
 	}
 

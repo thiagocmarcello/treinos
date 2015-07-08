@@ -15,16 +15,12 @@
 				<p:tab title="Cadastrar">
 					<h:form>
 						<p:panelGrid columns="2" id="personalPG" styleClass="semBorda">
-							<h:outputLabel value="Nome:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="nomeAcademia" value="Nome" />
 							<p:inputText id="nomeAcademia" required="true"
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{academiaController.academia.nome}" />
-							<h:outputLabel value="CNPJ:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
-							<p:inputText value="#{academiaController.academia.cnpj}"
+							<p:outputLabel for="cnpj" value="CNPJ" />
+							<p:inputText id="cnpj" value="#{academiaController.academia.cnpj}"
 							onkeypress="return somenteNumero(event);"
 								maxlength="14"
 								required="true" requiredMessage="Campo CNPJ obrigatório!">
@@ -38,17 +34,15 @@
 							<p:inputText value="#{academiaController.endereco.complemento}" />
 							<p:outputLabel value="Bairro:" />
 							<p:inputText value="#{academiaController.endereco.bairro}" />
-							<h:outputLabel value="Telefone:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
-							<p:inputText value="#{academiaController.endereco.telefone01}"
+							<p:outputLabel for="telefone" value="Telefone" />
+							<p:inputText id="telefone" value="#{academiaController.endereco.telefone01}"
 								required="true" requiredMessage="Campo Nome obrigatório!"
 								name="telefone" onkeyup="mascara( this, mtel );" maxlength="15" />
 							<p:outputLabel value=" Celular:" />
 							<p:inputText value="#{academiaController.endereco.celular}"
 								name="celular" onkeyup="mascara(this, mtel);" maxlength="15" />
 
-							<h:outputLabel value="Estado:" > <span class="texto_vermelho">*</span> </h:outputLabel>
+							<p:outputLabel for="idEstado" value="Estado" />
 							<p:selectOneMenu id="idEstado" required="true"
 								requiredMessage="Campo Estado obrigatório!"
 								value="#{academiaController.estadoSelecionado}">
@@ -60,7 +54,7 @@
 									listener="#{academiaController.carregarCidades()}" />
 							</p:selectOneMenu>
 
-							<h:outputLabel value="Cidade:" > <span class="texto_vermelho">*</span> </h:outputLabel>
+							<p:outputLabel for="idCidade" value="Cidade" />
 							<p:selectOneMenu id="idCidade" required="true"
 								requiredMessage="Campo Cidade obrigatório!"
 								disabled="#{academiaController.estadoSelecionado eq null}"

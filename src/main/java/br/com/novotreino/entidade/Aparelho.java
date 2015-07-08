@@ -17,7 +17,7 @@ public class Aparelho implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(length = 50)
+	@Column(length = 50, unique = true)
 	private String nome;
 
 	public Aparelho() {

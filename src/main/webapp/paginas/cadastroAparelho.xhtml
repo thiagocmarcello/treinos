@@ -15,9 +15,7 @@
 				<p:tab title="Cadastrar">
 					<h:form id="aparelhoFO">
 						<p:panelGrid columns="2" id="aparelhoPG" styleClass="semBorda">
-							<h:outputLabel value="Nome: ">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="nomeAparelho" value="Aparelho" />
 							<p:inputText id="nomeAparelho" required="true"
 								requiredMessage="Campo Nome do Aparelho Obrigatório!"
 								value="#{aparelhoController.aparelho.nome}" />

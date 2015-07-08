@@ -49,7 +49,7 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	private List<Treino> treinosCadastro;
 
 	private Date validadeTreino;
-
+	private Integer idAlunoAnterior;
 	private boolean editar;
 
 	// private List<AlunoTreino> alunosTreinos;
@@ -61,6 +61,7 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 		treinosCadastro = new ArrayList<Treino>();
 		alunoSelecionado = null;
 		validadeTreino = null;
+		idAlunoAnterior = 0;
 		buscarAlunos();
 		buscarMetodologias();
 		buscarAlunosTreinos();
@@ -147,8 +148,13 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 				alunoSelecionado.setAlunosTreinos(ats);
 				if (editar) {
 					alunoServico.alterar(alunoSelecionado);
+					if (alunoSelecionado.getId() == idAlunoAnterior) {
 					MensagemUtil.gerarSucesso("Aluno Treino.",
 							"Alterado com sucesso.");
+					} else {
+						MensagemUtil.gerarSucesso("Aluno Treino.",
+								"Treino clonado com sucesso.");
+					}
 				} else {
 					alunoServico.alterar(alunoSelecionado);
 					MensagemUtil.gerarSucesso("Aluno Treino.",
@@ -200,18 +206,25 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	}
 
 	public void editarAluno(Object k) {
-		Aluno aluno = (Aluno) k;
-		alunoSelecionado = aluno;
-		metodologiaSelecionada = metodologias.get(0);
-		for (AlunoTreino at : aluno.getAlunosTreinos()) {
-			if (treinosCadastro == null) {
-				treinosCadastro = new ArrayList<Treino>();
+		try {
+			Aluno aluno = (Aluno) k;
+			idAlunoAnterior = aluno.getId();
+			alunoSelecionado = aluno;
+			metodologiaSelecionada = metodologias.get(0);
+			treinos = treinoServico.obterPorMetodologia(metodologiaSelecionada);
+			for (AlunoTreino at : aluno.getAlunosTreinos()) {
+				if (treinosCadastro == null) {
+					treinosCadastro = new ArrayList<Treino>();
+				}
+				treinosCadastro.add(at.getTreino());
+				validadeTreino = at.getDataFim();
 			}
-			treinosCadastro.add(at.getTreino());
-			validadeTreino = at.getDataFim();
+			editar = true;
+			setIndexTab(0);
+		} catch (BaseServicoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		editar = true;
-		setIndexTab(0);
 	}
 
 	public void ativarInativar(Object obj) {

@@ -15,16 +15,12 @@
 					activeIndex="#{treinoController.indexTab}" styleClass="sem-bordas">
 					<p:tab title="Cadastrar">
 						<h:panelGrid columns="2">
-
-							<h:outputLabel value="Nome: ">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="nomeTreino" value="Nome" />
 							<p:inputText id="nomeTreino" required="true"
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{treinoController.treino.nome}" />
 
-							<h:outputLabel value="Metodologia:" >
-								<span class="texto_vermelho">*</span></h:outputLabel>
+							<p:outputLabel for="metodologiaSOM" value="Metodologia" />
 							<p:selectOneMenu id="metodologiaSOM"
 							required="true"
 								requiredMessage="Campo Metodologia obrigatório!"

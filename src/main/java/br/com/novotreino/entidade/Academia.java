@@ -25,7 +25,7 @@ public class Academia implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column
+	@Column(unique = true)
 	private String nome;
 	
 	@Column

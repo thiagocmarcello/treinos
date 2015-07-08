@@ -15,9 +15,7 @@
 				<p:tab title="Cadastrar">
 					<h:form>
 						<p:panelGrid columns="2" id="metodologiaPG" styleClass="semBorda">
-							<h:outputLabel value="Nome:">
-								<span class="texto_vermelho">*</span>
-							</h:outputLabel>
+							<p:outputLabel for="nomeMetodologia" value="Metodologia" />
 							<p:inputText id="nomeMetodologia" required="true"
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{metodologiaController.metodologia.nome}" />

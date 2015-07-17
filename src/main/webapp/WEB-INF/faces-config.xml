@@ -4,6 +4,18 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
 	version="2.2">
 
+	<application>
+		<resource-bundle>
+			<base-name>br.com.novotreino.internacionalization.messages</base-name>
+			<var>msg</var>
+		</resource-bundle>
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+			<supported-locale>pt_BR</supported-locale>
+			<supported-locale>en_US</supported-locale>
+		</locale-config>
+	</application>
+
 	<lifecycle>
 		<phase-listener>br.com.novotreino.listener.AutorizacaoListener</phase-listener>
 	</lifecycle>

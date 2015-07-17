@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import br.com.novotreino.dao.BaseDAOException;
 import br.com.novotreino.dao.UsuarioDAO;
 import br.com.novotreino.entidade.Usuario;
+import br.com.novotreino.util.CriptografiaUtil;
 
 @Stateless
 public class UsuarioServico extends BaseServico<Usuario> {
@@ -29,5 +30,9 @@ public class UsuarioServico extends BaseServico<Usuario> {
 		} catch (BaseDAOException e) {
 			throw new BaseServicoException(e.getMessage());
 		}
+	}
+	
+	public Usuario salvar(Usuario usuario) throws BaseServicoException {
+		return usuarioDAO.salvar(usuario);
 	}
 }

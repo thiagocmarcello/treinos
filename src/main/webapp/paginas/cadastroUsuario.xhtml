@@ -5,27 +5,159 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.prime.com.tr/ui">
+	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="../tamplate/template.xhtml">
 	<ui:define name="content">
-	<h:form>
-	<h:panelGrid columns="2">
-	
-	<h:outputLabel value="Nome: " />
-	<h:inputText id="nomeUsuario" 
-				 required="true"
-				 requiredMessage="Campo Nome da Campanha obrigatório" 
-				 value="#{usuarioController.nome}" />
-	
-	<h:outputLabel value="Email: " />
-	<h:inputText value="#{usuarioController.email}" />
-	
-	<h:commandButton action="#{usuarioController.salvar}" value="Salvar..." />
-	
+		<p:panel header="Usuario" id="usuarioPA">
+			<p:tabView id="usuarioTB" activeIndex="#{usuarioController.indexTab}"
+				styleClass="sem-bordas">
+				<p:tab title="Cadastrar">
+					<h:form>
+						<p:panelGrid columns="2" id="personalPG" styleClass="semBorda">
+							<p:outputLabel for="nomeUsuario" value="#{msg.nome}" />
+							<p:inputText id="nomeUsuario" required="true"
+								requiredMessage="#{msg.campo_nome_obrigatorio}"
+								value="#{usuarioController.usuario.nome}" />
+							<p:outputLabel for="cnpj" value="#{msg.cpf}" />
+							<p:inputText id="cnpj" value="#{usuarioController.usuario.cpf}"
+								onkeypress="return somenteNumero(event);" maxlength="14"
+								required="true" requiredMessage="#{msg.campo_cnpj_obrigatorio}">
+								<f:validator validatorId="cpfValidator" />
+							</p:inputText>
+							<p:outputLabel for="email" value="#{msg.email}" />
+							<p:inputText id="email" required="true"
+								requiredMessage="#{msg.campo_email_obrigatorio}"
+								value="#{usuarioController.usuario.email}" />
+							<p:outputLabel for="login" value="#{msg.login}" />
+							<p:inputText id="login"
+								value="#{usuarioController.usuario.login}" required="true"
+								requiredMessage="#{msg.campo_login_obrigatorio}" />
 
-		</h:panelGrid>
-	</h:form>
+							<p:outputLabel for="senha" value="#{msg.senha}" />
+							<p:password id="senha" value="#{usuarioController.usuario.senha}"
+								required="true" requiredMessage="#{msg.campo_senha_obrigatorio}" />
+
+							<p:outputLabel for="senhaRepita" value="#{msg.senha_repita}" />
+							<p:password id="senhaRepita"
+								value="#{usuarioController.senhaRepita}" required="true"
+								requiredMessage="#{msg.campo_senha_obrigatorio}" />
+
+							<p:outputLabel value="#{msg.rua}" />
+							<p:inputText value="#{usuarioController.enderecoUsuario.rua}" />
+							<p:outputLabel value="#{msg.numero}" />
+							<p:inputText value="#{usuarioController.enderecoUsuario.numero}" />
+							<p:outputLabel value="#{msg.complemento}" />
+							<p:inputText
+								value="#{usuarioController.enderecoUsuario.complemento}" />
+							<p:outputLabel value="#{msg.bairro}" />
+							<p:inputText value="#{usuarioController.enderecoUsuario.bairro}" />
+							<p:outputLabel for="telefone" value="#{msg.telefone}" />
+							<p:inputText id="telefone"
+								value="#{usuarioController.enderecoUsuario.telefone01}"
+								required="true"
+								requiredMessage="#{msg.campo_telefone_obrigatorio}"
+								name="telefone" onkeyup="mascara( this, mtel );" maxlength="15" />
+							<p:outputLabel value="#{msg.celular}" />
+							<p:inputText
+								value="#{usuarioController.enderecoUsuario.telefone02}"
+								name="celular" onkeyup="mascara(this, mtel);" maxlength="15" />
+
+							<p:outputLabel for="idEstado" value="#{msg.estado}" />
+							<p:selectOneMenu id="idEstado" required="true"
+								requiredMessage="#{msg.campo_estado_obrigatorio}"
+								value="#{usuarioController.estadoSelecionado}">
+								<f:selectItem itemLabel="#{msg.selecione}" itemValue="#{null}" />
+								<f:selectItems value="#{usuarioController.estados}" var="estado"
+									itemValue="#{estado.value}" itemLabel="#{estado.label}" />
+								<f:ajax render="idCidade" event="change"
+									listener="#{usuarioController.carregarCidades()}" />
+							</p:selectOneMenu>
+
+							<p:outputLabel for="idCidade" value="#{msg.cidade}" />
+							<p:selectOneMenu id="idCidade"
+								disabled="#{usuarioController.estadoSelecionado eq null}"
+								required="true" requiredMessage="#{msg.campo_cidade_obrigatorio}"
+								value="#{usuarioController.cidadeSelecionado}">
+								<f:selectItem itemLabel="#{msg.selecione}" itemValue="#{null}" />
+								<f:selectItems value="#{usuarioController.cidades}" var="cidade"
+									itemValue="#{cidade.value}" itemLabel="#{cidade.label}" />
+								<f:ajax />
+							</p:selectOneMenu>
+							
+
+							<p:outputLabel for="perfil" value="#{msg.perfil}" />
+							<p:selectOneMenu id="perfil" required="true"
+								requiredMessage="#{msg.campo_perfil_obrigatorio}"
+								value="#{usuarioController.ePerfilSelecionado}">
+								<f:selectItem itemLabel="#{msg.selecione}" />
+								<f:selectItems value="#{usuarioController.perfil}" var="perfil"
+									itemValue="#{perfil}" itemLabel="#{perfil.value}" />
+								<p:ajax />
+							</p:selectOneMenu>
+							
+							<p:outputLabel for="academiaSOM" value="#{msg.academia}" />
+							<p:selectOneMenu id="academiaSOM" required="true"
+								requiredMessage="#{msg.campo_academia_obrigatorio}"
+								value="#{usuarioController.academiaSelecionada}"
+								converter="academiaConverter">
+								<f:selectItem itemLabel="#{msg.selecione}" itemValue="0" />
+								<f:selectItems value="#{usuarioController.academias}" var="o"
+									itemValue="#{o}" itemLabel="#{o.nome}" />
+								<p:ajax />
+							</p:selectOneMenu>
+
+							<p:commandButton action="#{usuarioController.salvar()}"
+								value="Salvar" update=":usuarioTB :growl" />
+						</p:panelGrid>
+					</h:form>
+				</p:tab>
+				<!-- *** CONSULTAR *** -->
+				<p:tab title="Consultar">
+					<h:panelGrid>
+						<h:form>
+							<!-- 							<p:dataTable id="tablePessoa" -->
+							<!-- 								value="# {academiaController.academias}" var="p" rows="6" -->
+							<!-- 								emptyMessage="sem registros" paginator="true"> -->
+							<!-- 								<p:column> -->
+							<!-- 									<f:facet name="header"> -->
+							<!-- 										<h:outputText value="Nome" /> -->
+							<!-- 									</f:facet> -->
+							<!-- 									<h:outputText value="# {p.nome}" /> -->
+							<!-- 								</p:column> -->
+							<!-- 								<p:column> -->
+							<!-- 									<f:facet name="header"> -->
+							<!-- 										<h:outputText value="CNPJ" /> -->
+							<!-- 									</f:facet> -->
+							<!-- 									<h:outputText value="# {p.cnpj}" /> -->
+							<!-- 								</p:column> -->
+							<!-- 								<p:column> -->
+							<!-- 									<f:facet name="header"> -->
+							<!-- 										<h:outputText value="Telefone" /> -->
+							<!-- 									</f:facet> -->
+							<!-- 									<h:outputText value="# {p.endereco.telefone01}" /> -->
+							<!-- 								</p:column> -->
+							<!-- 								<p:column> -->
+							<!-- 									<f:facet name="header"> -->
+							<!-- 										<h:outputText value="Ações" /> -->
+							<!-- 									</f:facet> -->
+							<!-- 									<div class="alinha_centro"> -->
+							<!-- 									<p:commandButton process="@this" icon="delete" -->
+							<!-- 									onstart="if (!confirm(' Deseja realmente excluir academia?')) return false" -->
+							<!-- 										action="# {academiaController.deletar(p)}" -->
+							<!-- 										update=":usuarioPA :growl" title="Remover" /> -->
+							<!-- 									<p:commandButton process="@this" icon="editar" -->
+							<!-- 										action="# {academiaController.editar(p)}" update=":usuarioPA" -->
+							<!-- 										title="Alterar" /> -->
+							<!-- 										</div> -->
+							<!-- 								</p:column> -->
+
+							<!-- 							</p:dataTable> -->
+						</h:form>
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+		</p:panel>
 	</ui:define>
 </ui:composition>
 </html>

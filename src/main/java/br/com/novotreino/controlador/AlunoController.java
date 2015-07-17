@@ -64,7 +64,6 @@ public class AlunoController extends BaseController<Aluno> implements
 		carregarAlunos();
 		carregarAcademias();
 		iniciarEstados();
-
 	}
 
 	private void limpar() {

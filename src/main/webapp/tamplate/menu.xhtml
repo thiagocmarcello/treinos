@@ -9,6 +9,7 @@
 <ui:composition>
 	<h:form prependId="false">
 	<p:menubar>
+	<p:menuitem rendered="#{loginController.validarMenu('/paginas/cadastroUsuario.xhtml')}" value="Usuario" outcome="cadastroUsuario" icon="usuario"/>
 			<p:menuitem rendered="#{loginController.validarMenu('/paginas/cadastroAcademia.xhtml')}" value="Academia" outcome="cadastroAcademia" icon="venda"/>
 			<p:menuitem value="Aluno" outcome="cadastroAluno" icon="grupo"/>
 			<p:menuitem value="Aparelho" outcome="cadastroAparelho" icon="carenagem"/>

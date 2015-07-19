@@ -10,6 +10,7 @@ import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import br.com.novotreino.email.Email;
 import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Cidade;
 import br.com.novotreino.entidade.Endereco;
@@ -21,6 +22,7 @@ import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.CidadeServico;
 import br.com.novotreino.servico.EstadoServico;
 import br.com.novotreino.servico.UsuarioServico;
+import br.com.novotreino.util.ConfiguracaoUtil;
 import br.com.novotreino.util.MensagemUtil;
 
 @Named
@@ -38,6 +40,8 @@ public class UsuarioController extends BaseController<Usuario> implements
 	private EstadoServico estadoServico;
 	@EJB
 	private CidadeServico cidadeServico;
+	@EJB
+	private Email email;
 
 	private String senhaRepita;
 	private Usuario usuario;
@@ -50,6 +54,7 @@ public class UsuarioController extends BaseController<Usuario> implements
 	private Integer estadoSelecionado;
 	private List<SelectItem> cidades;
 	private Integer cidadeSelecionado;
+	private List<Usuario> usuarios;
 
 	@Override
 	@PostConstruct
@@ -57,6 +62,7 @@ public class UsuarioController extends BaseController<Usuario> implements
 		inicializarVariaveis();
 		buscarAcademias();
 		iniciarEstados();
+		buscarUsuarios();
 	}
 
 	private void inicializarVariaveis() {
@@ -84,6 +90,15 @@ public class UsuarioController extends BaseController<Usuario> implements
 		}
 	}
 
+	private void buscarUsuarios() {
+		try {
+			usuarios = usuarioServico.obterTodos();
+		} catch (BaseServicoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void carregarCidades() {
 		if (estadoSelecionado != null) {
 			cidades = new ArrayList<SelectItem>();
@@ -109,6 +124,10 @@ public class UsuarioController extends BaseController<Usuario> implements
 				if (usuario.getId() != null) {
 					MensagemUtil.gerarSucesso("Usuario.",
 							"Usuario salvo com sucesso.");
+					email.sendEmail(usuario.getEmail().toLowerCase(), ConfiguracaoUtil.emailDeEnvio(),
+							"Cadastro Usuário", "Seja bem vindo " + usuario.getNome() 
+							+ ", seu login é: " + usuario.getLogin()
+							+ " e a sua senha é: " + senhaRepita);
 					setIndexTab(1);
 					limparCampos();
 				} else {
@@ -251,5 +270,13 @@ public class UsuarioController extends BaseController<Usuario> implements
 
 	public void setCidadeSelecionado(Integer cidadeSelecionado) {
 		this.cidadeSelecionado = cidadeSelecionado;
+	}
+
+	public List<Usuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(List<Usuario> usuarios) {
+		this.usuarios = usuarios;
 	}
 }

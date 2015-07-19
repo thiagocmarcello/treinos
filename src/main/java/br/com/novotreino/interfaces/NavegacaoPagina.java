@@ -15,4 +15,6 @@ public interface NavegacaoPagina {
 	 public String PERSONAL = "/paginas/cadastroPersonal.xhtml";
 	 public String TREINO = "/paginas/cadastroTreino.xhtml";
 	 public String USUARIO = "/paginas/cadastroUsuario.xhtml";
+	 
+	 public String ALTERAR_SENHA = "/paginas/alterarSenha.xhtml";
 }

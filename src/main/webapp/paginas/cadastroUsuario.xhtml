@@ -77,14 +77,15 @@
 							<p:outputLabel for="idCidade" value="#{msg.cidade}" />
 							<p:selectOneMenu id="idCidade"
 								disabled="#{usuarioController.estadoSelecionado eq null}"
-								required="true" requiredMessage="#{msg.campo_cidade_obrigatorio}"
+								required="true"
+								requiredMessage="#{msg.campo_cidade_obrigatorio}"
 								value="#{usuarioController.cidadeSelecionado}">
 								<f:selectItem itemLabel="#{msg.selecione}" itemValue="#{null}" />
 								<f:selectItems value="#{usuarioController.cidades}" var="cidade"
 									itemValue="#{cidade.value}" itemLabel="#{cidade.label}" />
 								<f:ajax />
 							</p:selectOneMenu>
-							
+
 
 							<p:outputLabel for="perfil" value="#{msg.perfil}" />
 							<p:selectOneMenu id="perfil" required="true"
@@ -95,7 +96,7 @@
 									itemValue="#{perfil}" itemLabel="#{perfil.value}" />
 								<p:ajax />
 							</p:selectOneMenu>
-							
+
 							<p:outputLabel for="academiaSOM" value="#{msg.academia}" />
 							<p:selectOneMenu id="academiaSOM" required="true"
 								requiredMessage="#{msg.campo_academia_obrigatorio}"
@@ -116,43 +117,47 @@
 				<p:tab title="Consultar">
 					<h:panelGrid>
 						<h:form>
-							<!-- 							<p:dataTable id="tablePessoa" -->
-							<!-- 								value="# {academiaController.academias}" var="p" rows="6" -->
-							<!-- 								emptyMessage="sem registros" paginator="true"> -->
-							<!-- 								<p:column> -->
-							<!-- 									<f:facet name="header"> -->
-							<!-- 										<h:outputText value="Nome" /> -->
-							<!-- 									</f:facet> -->
-							<!-- 									<h:outputText value="# {p.nome}" /> -->
-							<!-- 								</p:column> -->
-							<!-- 								<p:column> -->
-							<!-- 									<f:facet name="header"> -->
-							<!-- 										<h:outputText value="CNPJ" /> -->
-							<!-- 									</f:facet> -->
-							<!-- 									<h:outputText value="# {p.cnpj}" /> -->
-							<!-- 								</p:column> -->
-							<!-- 								<p:column> -->
-							<!-- 									<f:facet name="header"> -->
-							<!-- 										<h:outputText value="Telefone" /> -->
-							<!-- 									</f:facet> -->
-							<!-- 									<h:outputText value="# {p.endereco.telefone01}" /> -->
-							<!-- 								</p:column> -->
-							<!-- 								<p:column> -->
-							<!-- 									<f:facet name="header"> -->
-							<!-- 										<h:outputText value="Ações" /> -->
-							<!-- 									</f:facet> -->
-							<!-- 									<div class="alinha_centro"> -->
-							<!-- 									<p:commandButton process="@this" icon="delete" -->
-							<!-- 									onstart="if (!confirm(' Deseja realmente excluir academia?')) return false" -->
-							<!-- 										action="# {academiaController.deletar(p)}" -->
-							<!-- 										update=":usuarioPA :growl" title="Remover" /> -->
-							<!-- 									<p:commandButton process="@this" icon="editar" -->
-							<!-- 										action="# {academiaController.editar(p)}" update=":usuarioPA" -->
-							<!-- 										title="Alterar" /> -->
-							<!-- 										</div> -->
-							<!-- 								</p:column> -->
+							<p:dataTable id="tablePessoa"
+								value="#{usuarioController.usuarios}" var="p" rows="6"
+								emptyMessage="sem registros" paginator="true">
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.nome}" />
+									</f:facet>
+									<h:outputText value="#{p.nome}" />
+								</p:column>
+								<!-- 								<p:column> -->
+								<!-- 									<f:facet name="header"> -->
+								<!-- 										<h:outputText value="CNPJ" /> -->
+								<!-- 									</f:facet> -->
+								<!-- 									<h:outputText value="# {p.cnpj}" /> -->
+								<!-- 								</p:column> -->
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.telefone}" />
+									</f:facet>
+									<h:outputText value="#{p.endereco.telefone01}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.acoes}" />
+									</f:facet>
+									<div class="alinha_centro">
+										<p:commandButton process="@this" icon="delete"
+											onstart="if (!confirm(' Deseja realmente excluir academia?')) return false"
+											action="# {academiaController.deletar(p)}"
+											update=":usuarioPA :growl" title="Remover" />
+										<p:commandButton process="@this" icon="editar"
+											action="# {academiaController.editar(p)}" update=":usuarioPA"
+											title="Alterar" />
+										<p:commandButton process="@this"
+											action="#{alunoController.ativarInativar(p)}"
+											title="#{p.ativo ? 'Ativo' : 'Inativo'}"
+											icon="#{p.ativo ? 'ativo' : 'inativo'}" update=":usuarioPA" />
+									</div>
+								</p:column>
 
-							<!-- 							</p:dataTable> -->
+							</p:dataTable>
 						</h:form>
 					</h:panelGrid>
 				</p:tab>

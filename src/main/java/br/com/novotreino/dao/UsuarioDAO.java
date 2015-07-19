@@ -17,8 +17,9 @@ public class UsuarioDAO extends BaseDAO<Usuario> {
 			Usuario usuario = (Usuario) getEm()
 					.createQuery(
 							"select u from Usuario u"
-									+ " where u.login =  :_login"
-									+ " and u.senha = :_senha")
+									+ " where u.login = :_login"
+									+ " and u.senha = :_senha"
+									+ " and u.ativo = true")
 					.setParameter("_login", login)
 					.setParameter("_senha", senha)
 					.getSingleResult();

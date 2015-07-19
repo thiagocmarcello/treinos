@@ -49,7 +49,7 @@ public class AutorizacaoListener implements PhaseListener, NavegacaoPagina, Http
 		}
 		ControleUtil controleUtil = new ControleUtil();
 		Usuario usuario = (Usuario) controleUtil.getSessao(EString.NOME_SESSAO_USUARIO.getValue());
-		if (usuario.getId() != null) {
+		if (usuario != null) {
 			if (PermissaoTelaUtil.temPermissao(usuario.getePerfil(), tela)) {
 				return;
 			} else {

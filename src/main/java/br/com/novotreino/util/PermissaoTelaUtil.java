@@ -20,6 +20,7 @@ public final class PermissaoTelaUtil implements NavegacaoPagina {
 		paginasUser.add(METODOLOGIA);
 		paginasUser.add(TREINO);
 		paginasUser.add(USUARIO);
+		paginasUser.add(ALTERAR_SENHA);
 	}
 
 	public static boolean temPermissao(EPerfil ePerfil, String tela) {

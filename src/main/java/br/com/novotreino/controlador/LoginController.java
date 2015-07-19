@@ -13,6 +13,7 @@ import br.com.novotreino.interfaces.NavegacaoPagina;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.UsuarioServico;
 import br.com.novotreino.util.ControleUtil;
+import br.com.novotreino.util.CriptografiaUtil;
 import br.com.novotreino.util.MensagemUtil;
 import br.com.novotreino.util.PermissaoTelaUtil;
 
@@ -34,9 +35,9 @@ public class LoginController implements NavegacaoPagina, Serializable {
 	public void autenticar() {
 		try {
 			if (validarCamposPreenchidosLoginESenha()) {
-				// senha = CriptografiaUtil.gerarHashSha1(senha);
-				Usuario usuario = usuarioServico.autenticar(login, senha.toUpperCase());
-				 if (usuario.getId() != null) {
+				senha = CriptografiaUtil.gerarHashSha1(senha.toUpperCase());
+				Usuario usuario = usuarioServico.autenticar(login, senha);
+				 if (usuario != null) {
                      controleUtil.setSessao(EString.NOME_SESSAO_USUARIO.getValue(), usuario);
                      //unicidadeLogin.adicionaUsuarioLogado(usuarioSessao);
                      controleUtil.redirecionar(ALUNO);
@@ -45,7 +46,7 @@ public class LoginController implements NavegacaoPagina, Serializable {
                  }
 			}
 		} catch (BaseServicoException e) {
-			e.printStackTrace();
+			controleUtil.redirecionar(LOGIN);
 		}
 	}
 
@@ -65,6 +66,15 @@ public class LoginController implements NavegacaoPagina, Serializable {
 		} else {
 			return false;
 		}
+	}
+	
+	public void encerrarSessao() {
+		controleUtil.limparSessao();
+		controleUtil.redirecionar(LOGIN);
+	}
+	
+	public String getNomeUsuarioSessao() {
+		return ((Usuario) controleUtil.getSessao(EString.NOME_SESSAO_USUARIO.getValue())).getNome();
 	}
 	
 	public String getLogin() {

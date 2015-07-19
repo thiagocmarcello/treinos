@@ -6,10 +6,20 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<div>
-		<span> Meu Treino - Todos os seus Treinos Online!</span>
-		<div class="dados_usuario">
-			<span class="data_hora">31/12/2099 00:00</span>
+	<h:form>
+		<div class="barra_topo clear">
+			<h:commandLink action="#{loginController.encerrarSessao()}"
+				styleClass="bt_sair" />
+			<div class="dados_usuario">
+				<img src="../imagens/icones/user.png" width="16" height="16"
+					alt="#{loginController.nomeUsuarioSessao}" class="ico_usuario" />
+				<strong> 
+					<h:commandLink value="#{loginController.nomeUsuarioSessao}"
+						title="Alterar Senha Usuário"
+						action="#{menuController.alterarSenha()}" />
+				</strong> <span class="data_hora">31/12/2099 00:00</span>
+			</div>
+			<span> Meu Treino - Todos os seus Treinos Online!</span>
 		</div>
-	</div>
+	</h:form>
 </ui:composition>

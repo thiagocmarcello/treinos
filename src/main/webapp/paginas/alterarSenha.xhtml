@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../tamplate/template.xhtml">
+	<ui:define name="content">
+		<p:panel header="Alterar Senha Usuário" id="usuarioPA">
+			<p:tabView id="alterarTB" activeIndex="#{usuarioController.indexTab}"
+				styleClass="sem-bordas">
+				<p:tab title="Alterar">
+					<h:form>
+						<p:panelGrid columns="2" id="personalPG" styleClass="semBorda">
+							<p:outputLabel value="#{msg.nome}" />
+							<p:outputLabel id="nomeUsuario" 
+								value="#{alterarUsuarioController.usuario.nome}" />
+								
+							<p:outputLabel value="#{msg.login}" />
+							<p:outputLabel id="loginUsuario"
+								value="#{alterarUsuarioController.usuario.login}" />
+
+							<p:outputLabel  value="#{msg.email}" />
+							<p:outputLabel id="emailUsuario" 
+								value="#{alterarUsuarioController.usuario.email}"/>
+
+							<p:outputLabel for="senhaAtual" value="#{msg.senha_atual}" />
+							<p:password id="senhaAtual" value="#{alterarUsuarioController.senhaAtual}"
+								required="true" requiredMessage="#{msg.campo_senha_obrigatorio}" />
+							
+							<p:outputLabel for="senha" value="#{msg.senha}" />
+							<p:password id="senha" value="#{alterarUsuarioController.novaSenha}"
+								required="true" requiredMessage="#{msg.campo_senha_obrigatorio}" />
+
+							<p:outputLabel for="novaSenha" value="#{msg.senha_repita}" />
+							<p:password id="novaSenha"
+								value="#{alterarUsuarioController.novaSenhaRepita}" required="true"
+								requiredMessage="#{msg.campo_senha_obrigatorio}" />
+							
+							<p:commandButton action="#{alterarUsuarioController.salvar()}"
+								value="Salvar" update=":alterarTB :growl" />
+						</p:panelGrid>
+					</h:form>
+				</p:tab>
+			</p:tabView>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+</html>

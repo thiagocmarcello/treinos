@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import lombok.EqualsAndHashCode;
@@ -91,6 +92,7 @@ public class Usuario implements Serializable {
 		}
 		
 		@PrePersist
+		@PreUpdate
 		public void criptografarSenha() {
 			senha = CriptografiaUtil.gerarHashSha1(senha);
 		}

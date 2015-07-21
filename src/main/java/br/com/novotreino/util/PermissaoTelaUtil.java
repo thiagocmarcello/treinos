@@ -19,7 +19,7 @@ public final class PermissaoTelaUtil implements NavegacaoPagina {
 		paginasUser.add(APARELHO);
 		paginasUser.add(METODOLOGIA);
 		paginasUser.add(TREINO);
-		paginasUser.add(USUARIO);
+		//paginasUser.add(USUARIO);
 		paginasUser.add(ALTERAR_SENHA);
 	}
 

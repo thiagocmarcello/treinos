@@ -72,9 +72,9 @@
 
 							<h:outputLabel value=" Observações " />
 							<h:inputTextarea value="#{alunoController.aluno.observacao}" />
-
-							<p:outputLabel for="academiaSOM" value="Academia" />
-							<p:selectOneMenu id="academiaSOM" required="true"
+							
+							<p:outputLabel for="academiaSOM" value="Academia" rendered="#{loginController.checarPerfilAdmin()}" />
+							<p:selectOneMenu rendered="#{loginController.checarPerfilAdmin()}" id="academiaSOM" required="true"
 								requiredMessage="Selecione a academia."
 								value="#{alunoController.academiaSelecionada}"
 								converter="academiaConverter">

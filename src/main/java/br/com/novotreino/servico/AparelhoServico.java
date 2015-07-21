@@ -1,11 +1,14 @@
 package br.com.novotreino.servico;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import br.com.novotreino.dao.AparelhoDAO;
 import br.com.novotreino.dao.BaseDAOException;
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Aparelho;
 
 @Stateless
@@ -26,7 +29,6 @@ public class AparelhoServico extends BaseServico<Aparelho> {
 		this.aparelho = aparelho;
 		try {
 			if (verificarConsistenciaAparelho()) {
-
 				deletar(aparelho, aparelho.getId());
 
 				return true;
@@ -46,5 +48,9 @@ public class AparelhoServico extends BaseServico<Aparelho> {
 		} else {
 			return true;
 		}
+	}
+	
+	public List<Aparelho> obterTodosPorAcademia(Academia academia) throws BaseServicoException {
+		return aparelhoDAO.obterTodosPorAcademia(academia);
 	}
 }

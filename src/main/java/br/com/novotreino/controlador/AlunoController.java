@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -17,11 +18,14 @@ import br.com.novotreino.entidade.Aluno;
 import br.com.novotreino.entidade.Cidade;
 import br.com.novotreino.entidade.Endereco;
 import br.com.novotreino.entidade.Estado;
+import br.com.novotreino.entidade.Usuario;
+import br.com.novotreino.enums.EString;
 import br.com.novotreino.servico.AcademiaServico;
 import br.com.novotreino.servico.AlunoServico;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.CidadeServico;
 import br.com.novotreino.servico.EstadoServico;
+import br.com.novotreino.util.ControleUtil;
 import br.com.novotreino.util.MensagemUtil;
 
 @Named
@@ -38,6 +42,10 @@ public class AlunoController extends BaseController<Aluno> implements
 	private AlunoServico alunoServico;
 	@EJB
 	private AcademiaServico academiaServico;
+	@Inject
+	private ControleUtil controleUtil;
+	@Inject
+	private LoginController loginController;
 	/* Componentes de tela */
 	private List<SelectItem> estados;
 	private Integer estadoSelecionado;
@@ -48,6 +56,7 @@ public class AlunoController extends BaseController<Aluno> implements
 	private List<Aluno> alunos;
 	private Academia academiaSelecionada;
 	private List<Academia> academias;
+	private Usuario usuarioSessao;
 
 	@Override
 	protected Class<Aluno> getManagedClass() {
@@ -61,9 +70,15 @@ public class AlunoController extends BaseController<Aluno> implements
 		aluno.setSexo(true);
 		aluno.setAtivo(true);
 		endereco = new Endereco();
+		buscarUsuarioSessao();
 		carregarAlunos();
 		carregarAcademias();
 		iniciarEstados();
+	}
+
+	private void buscarUsuarioSessao() {
+		usuarioSessao = (Usuario) controleUtil
+				.getSessao(EString.NOME_SESSAO_USUARIO.getValue());
 	}
 
 	private void limpar() {
@@ -75,16 +90,22 @@ public class AlunoController extends BaseController<Aluno> implements
 
 	private void carregarAlunos() {
 		try {
-			alunos = alunoServico.obterTodos();
+			alunos = alunoServico.obterTodosPorAcademia(usuarioSessao);
 		} catch (BaseServicoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void carregarAcademias() {
 		try {
-			academias = academiaServico.obterTodos();
+			if (loginController.checarPerfilAdmin()) {
+				academias = academiaServico.obterTodos();
+			} else {
+				academias = new ArrayList<Academia>();
+				academias.add(usuarioSessao.getAcademia());
+				academiaSelecionada = usuarioSessao.getAcademia();
+			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
@@ -122,17 +143,14 @@ public class AlunoController extends BaseController<Aluno> implements
 		try {
 			if (aluno.getId() != null) {
 				aluno = alunoServico.alterar(aluno);
-				MensagemUtil.gerarSucesso("Aluno.", 
-						"Alterado com suceso.");
+				MensagemUtil.gerarSucesso("Aluno.", "Alterado com suceso.");
 			} else {
 				aluno = alunoServico.salvar(aluno);
-				MensagemUtil.gerarSucesso("Aluno.", 
-						"Salvo com suceso.");
+				MensagemUtil.gerarSucesso("Aluno.", "Salvo com suceso.");
 			}
 			setIndexTab(1);
 		} catch (BaseServicoException e) {
-			MensagemUtil.gerarErro("Aluno.", 
-					"Email já cadastrado.");
+			MensagemUtil.gerarErro("Aluno.", "Email já cadastrado.");
 		}
 		limpar();
 		return null;
@@ -201,14 +219,13 @@ public class AlunoController extends BaseController<Aluno> implements
 			alunoServico.deletar(a, a.getId());
 			limpar();
 			setIndexTab(1);
-			MensagemUtil.gerarSucesso("Aluno.", 
-					"Deletado com suceso.");
+			MensagemUtil.gerarSucesso("Aluno.", "Deletado com suceso.");
 		} catch (BaseServicoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void ativarInativar(Object obj) {
 		Aluno a = (Aluno) obj;
 		aluno = a;

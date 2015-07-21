@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.novotreino.entidade.Usuario;
+import br.com.novotreino.enums.EPerfil;
 import br.com.novotreino.enums.EString;
 import br.com.novotreino.interfaces.NavegacaoPagina;
 import br.com.novotreino.servico.BaseServicoException;
@@ -75,6 +76,19 @@ public class LoginController implements NavegacaoPagina, Serializable {
 	
 	public String getNomeUsuarioSessao() {
 		return ((Usuario) controleUtil.getSessao(EString.NOME_SESSAO_USUARIO.getValue())).getNome();
+	}
+	
+	public String getPerfilUsuarioSessao() {
+		return ((Usuario) controleUtil.getSessao(EString.NOME_SESSAO_USUARIO.getValue())).getePerfil().getValue();
+	}
+	
+	public boolean checarPerfilAdmin() {
+		Usuario user = (Usuario) controleUtil.getSessao(EString.NOME_SESSAO_USUARIO.getValue());
+		if (user.getePerfil().equals(EPerfil.ADMIN)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public String getLogin() {

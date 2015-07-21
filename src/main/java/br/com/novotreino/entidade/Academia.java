@@ -39,6 +39,9 @@ public class Academia implements Serializable {
 	@OneToMany(mappedBy = "academia")
 	private List<Aluno> alunos;
 	
+	@OneToMany(mappedBy = "academia")
+	private List<Aparelho> aparelhos;
+	
 	public Academia() {
 	}
 
@@ -80,6 +83,14 @@ public class Academia implements Serializable {
 
 	public Integer getId() {
 		return id;
+	}
+
+	public List<Aparelho> getAparelhos() {
+		return aparelhos;
+	}
+
+	public void setAparelhos(List<Aparelho> aparelhos) {
+		this.aparelhos = aparelhos;
 	}
 
 	@Override

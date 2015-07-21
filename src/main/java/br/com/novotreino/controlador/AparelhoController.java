@@ -7,13 +7,17 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Aparelho;
+import br.com.novotreino.entidade.Usuario;
+import br.com.novotreino.enums.EString;
 import br.com.novotreino.servico.AcademiaServico;
 import br.com.novotreino.servico.AparelhoServico;
 import br.com.novotreino.servico.BaseServicoException;
+import br.com.novotreino.util.ControleUtil;
 import br.com.novotreino.util.MensagemUtil;
 
 @Named
@@ -26,12 +30,17 @@ public class AparelhoController extends BaseController<Aparelho> implements
 	private AparelhoServico aparelhoServico;
 	@EJB
 	private AcademiaServico academiaServico;
+	@Inject
+	private LoginController loginController;
+	@Inject
+	private ControleUtil controleUtil;
 
 	private Aparelho aparelho;
 	private List<Aparelho> aparelhos;
 	private String nomeAparelho;
 	private List<Academia> academias;
-	private List<Academia> academiasSelecionadas;
+	private Academia academiaSelecionada;
+	private Usuario usuarioSessao;
 
 	@Override
 	protected Class<Aparelho> getManagedClass() {
@@ -42,23 +51,37 @@ public class AparelhoController extends BaseController<Aparelho> implements
 	@PostConstruct
 	public void inicializar() {
 		aparelho = new Aparelho();
-		academiasSelecionadas = new ArrayList<Academia>();
+		buscarUsuarioSessao();
 		buscarAparelhos();
 		buscarAcademias();
 	}
 
+	private void buscarUsuarioSessao() {
+		usuarioSessao = (Usuario) controleUtil
+				.getSessao(EString.NOME_SESSAO_USUARIO.getValue());
+	}
+
 	private void buscarAparelhos() {
 		try {
-			aparelhos = aparelhoServico.obterTodos();
+			if (loginController.checarPerfilAdmin()) {
+				aparelhos = aparelhoServico.obterTodos();
+			} else {
+				aparelhos = aparelhoServico.obterTodosPorAcademia(usuarioSessao.getAcademia());
+			}
 		} catch (BaseServicoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private void buscarAcademias() {
 		try {
-			academias = academiaServico.obterTodos();
+			if (loginController.checarPerfilAdmin()) {
+				academias = academiaServico.obterTodos();
+			} else {
+				academias = new ArrayList<Academia>();
+				academias.add(usuarioSessao.getAcademia());
+				academiaSelecionada = usuarioSessao.getAcademia();
+			}
 		} catch (BaseServicoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,18 +92,17 @@ public class AparelhoController extends BaseController<Aparelho> implements
 	public String salvar() {
 		try {
 			if ("".equals(aparelho.getId()) || aparelho.getId() == null) {
+				aparelho.setAcademia(academiaSelecionada);
 				aparelho = aparelhoServico.salvar(aparelho);
-				MensagemUtil.gerarSucesso("Aparelho.", 
-						"Salvo com suceso.");
+				MensagemUtil.gerarSucesso("Aparelho.", "Salvo com suceso.");
 			} else {
 				aparelho = aparelhoServico.alterar(aparelho);
-				MensagemUtil.gerarSucesso("Aparelho.", 
-						"Alterado com suceso.");
+				MensagemUtil.gerarSucesso("Aparelho.", "Alterado com suceso.");
 			}
 			inicializar();
 			setIndexTab(1);
 		} catch (BaseServicoException e) {
-			MensagemUtil.gerarErro("Aparelho.", 
+			MensagemUtil.gerarErro("Aparelho.",
 					"Já existe aparelho cadastrado.");
 		}
 		return null;
@@ -95,12 +117,11 @@ public class AparelhoController extends BaseController<Aparelho> implements
 			buscarAparelhos();
 			setIndexTab(1);
 			if (deletado) {
-				MensagemUtil.gerarSucesso("Aparelho.", 
-						"Excluido com suceso.");
-				} else {
-					MensagemUtil.gerarErro("Aparelho.",
-							"Existem treinos associados a este aparelho.");
-				}
+				MensagemUtil.gerarSucesso("Aparelho.", "Excluido com suceso.");
+			} else {
+				MensagemUtil.gerarErro("Aparelho.",
+						"Existem treinos associados a este aparelho.");
+			}
 		} catch (BaseServicoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,6 +131,7 @@ public class AparelhoController extends BaseController<Aparelho> implements
 	@Override
 	public void editar(Aparelho k) {
 		aparelho = k;
+		academiaSelecionada = k.getAcademia();
 		setIndexTab(0);
 	}
 
@@ -149,11 +171,11 @@ public class AparelhoController extends BaseController<Aparelho> implements
 		this.academias = academias;
 	}
 
-	public List<Academia> getAcademiasSelecionadas() {
-		return academiasSelecionadas;
+	public Academia getAcademiaSelecionada() {
+		return academiaSelecionada;
 	}
 
-	public void setAcademiasSelecionadas(List<Academia> academiasSelecionadas) {
-		this.academiasSelecionadas = academiasSelecionadas;
+	public void setAcademiaSelecionada(Academia academiaSelecionada) {
+		this.academiaSelecionada = academiaSelecionada;
 	}
 }

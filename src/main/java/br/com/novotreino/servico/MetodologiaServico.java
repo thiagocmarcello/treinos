@@ -1,5 +1,7 @@
 package br.com.novotreino.servico;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -7,6 +9,7 @@ import javax.inject.Inject;
 import sun.nio.ch.BsdAsynchronousChannelProvider;
 import br.com.novotreino.dao.BaseDAOException;
 import br.com.novotreino.dao.MetodologiaDAO;
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Metodologia;
 
 @Stateless
@@ -46,5 +49,9 @@ public class MetodologiaServico extends BaseServico<Metodologia> {
 		} catch (BaseDAOException e) {
 			throw new BaseDAOException(e.getMessage());
 		}
+	}
+
+	public List<Metodologia> obterTodosPorAcademia(Academia academia) throws BaseServicoException {
+		return metodologiaDAO.obterTodosPorAcademia(academia);
 	}
 }

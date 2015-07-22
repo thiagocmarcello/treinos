@@ -1,16 +1,23 @@
 package br.com.novotreino.controlador;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Metodologia;
+import br.com.novotreino.entidade.Usuario;
+import br.com.novotreino.enums.EString;
+import br.com.novotreino.servico.AcademiaServico;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.MetodologiaServico;
+import br.com.novotreino.util.ControleUtil;
 import br.com.novotreino.util.MensagemUtil;
 
 @Named
@@ -22,9 +29,18 @@ public class MetodologiaController extends BaseController<Metodologia>
 
 	@EJB
 	private MetodologiaServico metodologiaServico;
-
+	@EJB
+	private AcademiaServico academiaServico;
+	@Inject
+	private LoginController loginController;
+	@Inject
+	private ControleUtil controleUtil;
 	private List<Metodologia> metodologias;
 	private Metodologia metodologia;
+
+	private List<Academia> academias;
+	private Academia academiaSelecionada;
+	private Usuario usuarioSessao;
 
 	@Override
 	protected Class<Metodologia> getManagedClass() {
@@ -35,33 +51,60 @@ public class MetodologiaController extends BaseController<Metodologia>
 	@PostConstruct
 	public void inicializar() {
 		metodologia = new Metodologia();
+		academiaSelecionada = null;
+		buscarUsuarioSessao();
 		carregarMetodologias();
+		buscarAcademias();
+	}
+
+	private void buscarUsuarioSessao() {
+		usuarioSessao = (Usuario) controleUtil
+				.getSessao(EString.NOME_SESSAO_USUARIO.getValue());
 	}
 
 	private void carregarMetodologias() {
 		try {
-			metodologias = metodologiaServico.obterTodos();
+			if (loginController.checarPerfilAdmin()) {
+				metodologias = metodologiaServico.obterTodos();
+			} else {
+				metodologias = metodologiaServico.obterTodosPorAcademia(usuarioSessao.getAcademia());
+			}
+		} catch (BaseServicoException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void buscarAcademias() {
+		try {
+			if (loginController.checarPerfilAdmin()) {
+				academias = academiaServico.obterTodos();
+			} else {
+				academias = new ArrayList<Academia>();
+				academias.add(usuarioSessao.getAcademia());
+				academiaSelecionada = usuarioSessao.getAcademia();
+			}
 		} catch (BaseServicoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Override
 	public String salvar() {
 		try {
 			if (metodologia.getId() != null) {
+				metodologia.setAcademia(academiaSelecionada);
 				metodologiaServico.alterar(metodologia);
-				MensagemUtil.gerarSucesso("Metodologia.", 
+				MensagemUtil.gerarSucesso("Metodologia.",
 						"Alterado com suceso.");
 			} else {
+				metodologia.setAcademia(academiaSelecionada);
 				metodologiaServico.salvar(metodologia);
-				MensagemUtil.gerarSucesso("Metodologia.", 
-						"Salvo com suceso.");
+				MensagemUtil.gerarSucesso("Metodologia.", "Salvo com suceso.");
 			}
 			setIndexTab(1);
 		} catch (BaseServicoException e) {
-			MensagemUtil.gerarErro("Metodologia.", 
+			MensagemUtil.gerarErro("Metodologia.",
 					"Já existe metodologia cadastrada.");
 		}
 		inicializar();
@@ -76,10 +119,10 @@ public class MetodologiaController extends BaseController<Metodologia>
 			inicializar();
 			setIndexTab(1);
 			if (deletar) {
-				MensagemUtil.gerarSucesso("Metodologia.", 
+				MensagemUtil.gerarSucesso("Metodologia.",
 						"Deletado com suceso.");
 			} else {
-				MensagemUtil.gerarErro("Metodologia.", 
+				MensagemUtil.gerarErro("Metodologia.",
 						"Existem treinos associados a essa metodologia.");
 			}
 		} catch (BaseServicoException e) {
@@ -91,6 +134,7 @@ public class MetodologiaController extends BaseController<Metodologia>
 	@Override
 	public void editar(Metodologia k) {
 		metodologia = k;
+		academiaSelecionada = k.getAcademia();
 		setIndexTab(0);
 	}
 
@@ -108,5 +152,21 @@ public class MetodologiaController extends BaseController<Metodologia>
 
 	public void setMetodologia(Metodologia metodologia) {
 		this.metodologia = metodologia;
+	}
+
+	public List<Academia> getAcademias() {
+		return academias;
+	}
+
+	public void setAcademias(List<Academia> academias) {
+		this.academias = academias;
+	}
+
+	public Academia getAcademiaSelecionada() {
+		return academiaSelecionada;
+	}
+
+	public void setAcademiaSelecionada(Academia academiaSelecionada) {
+		this.academiaSelecionada = academiaSelecionada;
 	}
 }

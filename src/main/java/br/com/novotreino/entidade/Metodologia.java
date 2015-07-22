@@ -8,8 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.ForeignKey;
 
 @SuppressWarnings("serial")
 @Entity
@@ -25,6 +29,11 @@ public class Metodologia implements Serializable {
 	
 	@OneToMany(mappedBy = "metodologia")
 	private List<Treino> treinos;
+	
+	@ManyToOne
+	@JoinColumn(name = "_academia")
+	@ForeignKey(name = "fk_academia_metodologia")
+	private Academia academia;
 	
 	public Metodologia() {
 	}
@@ -51,6 +60,14 @@ public class Metodologia implements Serializable {
 
 	public void setTreinos(List<Treino> treinos) {
 		this.treinos = treinos;
+	}
+
+	public Academia getAcademia() {
+		return academia;
+	}
+
+	public void setAcademia(Academia academia) {
+		this.academia = academia;
 	}
 
 	@Override

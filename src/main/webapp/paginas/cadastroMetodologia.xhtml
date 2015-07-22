@@ -19,6 +19,21 @@
 							<p:inputText id="nomeMetodologia" required="true"
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{metodologiaController.metodologia.nome}" />
+								
+							<p:outputLabel for="academiaSOM" value="Academia"
+								rendered="#{loginController.checarPerfilAdmin()}" />
+							<p:selectOneMenu
+								rendered="#{loginController.checarPerfilAdmin()}"
+								id="academiaSOM" required="true"
+								requiredMessage="Selecione a academia."
+								value="#{metodologiaController.academiaSelecionada}"
+								converter="academiaConverter">
+								<f:selectItem itemLabel="Selecione..." itemValue="0" />
+								<f:selectItems value="#{metodologiaController.academias}" var="o"
+									itemValue="#{o}" itemLabel="#{o.nome}" />
+								<p:ajax />
+							</p:selectOneMenu>
+								
 							<p:commandButton action="#{metodologiaController.salvar()}"
 								value="Salvar" update=":metodologiaTB :growl" />
 						</p:panelGrid>
@@ -36,6 +51,12 @@
 										<h:outputText value="Nome" />
 									</f:facet>
 									<h:outputText value="#{p.nome}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Academia" />
+									</f:facet>
+									<h:outputText value="#{p.academia.nome}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">

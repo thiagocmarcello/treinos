@@ -45,6 +45,9 @@ public class Academia implements Serializable {
 	@OneToMany(mappedBy = "academia")
 	private List<Metodologia> metodologias;
 	
+	@OneToMany(mappedBy = "academia")
+	private List<Treino> treinos;
+	
 	public Academia() {
 	}
 

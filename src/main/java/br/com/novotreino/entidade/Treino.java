@@ -41,6 +41,11 @@ public class Treino implements Serializable {
 	@OneToMany(mappedBy = "treino", fetch = FetchType.EAGER, 
 			cascade = CascadeType.REMOVE)
 	private List<AlunoTreino> alunosTreinos;
+	
+	@ManyToOne
+	@JoinColumn(name = "_academia")
+	@ForeignKey(name = "fk_academia_treino")
+	private Academia academia;
 
 	public Treino() {
 	}
@@ -88,6 +93,14 @@ public class Treino implements Serializable {
 
 	public void setAlunosTreinos(List<AlunoTreino> alunosTreinos) {
 		this.alunosTreinos = alunosTreinos;
+	}
+
+	public Academia getAcademia() {
+		return academia;
+	}
+
+	public void setAcademia(Academia academia) {
+		this.academia = academia;
 	}
 
 	@Override

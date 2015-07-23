@@ -15,14 +15,28 @@
 					activeIndex="#{treinoController.indexTab}" styleClass="sem-bordas">
 					<p:tab title="Cadastrar">
 						<h:panelGrid columns="2">
+
+							<p:outputLabel for="academiaSOM" value="Academia"
+								rendered="#{loginController.checarPerfilAdmin()}" />
+							<p:selectOneMenu
+								rendered="#{loginController.checarPerfilAdmin()}"
+								id="academiaSOM" required="true"
+								requiredMessage="Selecione a academia."
+								value="#{treinoController.academiaSelecionada}"
+								converter="academiaConverter">
+								<f:selectItem itemLabel="Selecione..." itemValue="0" />
+								<f:selectItems value="#{treinoController.academias}"
+									var="o" itemValue="#{o}" itemLabel="#{o.nome}" />
+								<p:ajax listener="#{treinoController.carregarMetodologiaEAparelho()}" update=":aparelhoFO:aparelhoTV:metodologiaSOM :aparelhoFO:aparelhoTV:idTreino"/>
+							</p:selectOneMenu>
+
 							<p:outputLabel for="nomeTreino" value="Nome" />
 							<p:inputText id="nomeTreino" required="true"
 								requiredMessage="Campo Nome obrigatório!"
 								value="#{treinoController.treino.nome}" />
 
 							<p:outputLabel for="metodologiaSOM" value="Metodologia" />
-							<p:selectOneMenu id="metodologiaSOM"
-							required="true"
+							<p:selectOneMenu id="metodologiaSOM" required="true"
 								requiredMessage="Campo Metodologia obrigatório!"
 								value="#{treinoController.metodologiaSelecionada}"
 								converter="converterMetodologia">
@@ -43,22 +57,20 @@
 							</p:selectOneMenu>
 
 							<h:outputLabel value="Sequencia: " />
-							<p:inputText id="sequencia" maxlength="2" size="5" 
-								value="#{treinoController.exercicio.sequencia}" 
-								onkeypress="return somenteNumero(event);" >
+							<p:inputText id="sequencia" maxlength="2" size="5"
+								value="#{treinoController.exercicio.sequencia}"
+								onkeypress="return somenteNumero(event);">
 								<f:ajax />
 							</p:inputText>
 
 							<h:outputLabel id="repeticao" value="Repetição: " />
-							<p:inputText value="#{treinoController.exercicio.repeticao}" 
-							maxlength="2" size="5" 
-							onkeypress="return somenteNumero(event);">
+							<p:inputText value="#{treinoController.exercicio.repeticao}"
+								maxlength="2" size="5" onkeypress="return somenteNumero(event);">
 								<f:ajax />
 							</p:inputText>
 
 							<p:commandButton
-								action="#{treinoController.adicionarExercicio()}"
-								icon="add"
+								action="#{treinoController.adicionarExercicio()}" icon="add"
 								title="Adicionar Aparelho" process="@this, nomeTreino"
 								update=":aparelhoFO :growl">
 							</p:commandButton>
@@ -94,6 +106,12 @@
 										<h:outputText value="Metodologia" />
 									</f:facet>
 									<h:outputText value="#{p.metodologia.nome}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Academia" />
+									</f:facet>
+									<h:outputText value="#{p.academia.nome}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">

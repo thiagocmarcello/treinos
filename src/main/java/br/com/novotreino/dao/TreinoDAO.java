@@ -2,6 +2,7 @@ package br.com.novotreino.dao;
 
 import java.util.List;
 
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Metodologia;
 import br.com.novotreino.entidade.Treino;
 
@@ -28,5 +29,12 @@ public class TreinoDAO extends BaseDAO<Treino> {
 						"select altr from AlunoTreino altr"
 								+ " where altr.treino = :_treino")
 				.setParameter("_treino", treino).getResultList().size();
+	}
+
+	public List<Treino> obterTodosPorAcademia(Academia academia) throws BaseDAOException {
+		return getEm().createQuery("select t from Treino t"
+				+ " where t.academia = :_academia", Treino.class)
+				.setParameter("_academia", academia)
+				.getResultList();
 	}
 }

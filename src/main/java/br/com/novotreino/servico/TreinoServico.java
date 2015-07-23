@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import br.com.novotreino.dao.BaseDAOException;
 import br.com.novotreino.dao.TreinoDAO;
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Metodologia;
 import br.com.novotreino.entidade.Treino;
 
@@ -50,6 +51,15 @@ public class TreinoServico extends BaseServico<Treino> {
 			} else {
 				return true;
 			}
+		} catch (BaseDAOException e) {
+			throw new BaseServicoException(e.getMessage());
+		}
+	}
+
+	public List<Treino> obterTodosPorAcademia(Academia academia)
+			throws BaseServicoException {
+		try {
+			return treinoDAO.obterTodosPorAcademia(academia);
 		} catch (BaseDAOException e) {
 			throw new BaseServicoException(e.getMessage());
 		}

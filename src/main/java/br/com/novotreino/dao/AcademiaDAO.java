@@ -1,5 +1,7 @@
 package br.com.novotreino.dao;
 
+import java.util.List;
+
 import br.com.novotreino.entidade.Academia;
 
 public class AcademiaDAO extends BaseDAO<Academia> {
@@ -16,6 +18,12 @@ public class AcademiaDAO extends BaseDAO<Academia> {
 				+ " where ac = :_academia")
 				.setParameter("_academia", academia)
 				.getResultList().size();
+	}
+
+	public List<Academia> obterTodosPorAcademia(Academia academia) {
+		return getEm().createQuery("select", Academia.class)
+				.setParameter("_academia", academia)
+				.getResultList();
 	}
 
 }

@@ -8,17 +8,23 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Aluno;
 import br.com.novotreino.entidade.Aparelho;
 import br.com.novotreino.entidade.Exercicio;
 import br.com.novotreino.entidade.Metodologia;
 import br.com.novotreino.entidade.Treino;
+import br.com.novotreino.entidade.Usuario;
+import br.com.novotreino.enums.EString;
+import br.com.novotreino.servico.AcademiaServico;
 import br.com.novotreino.servico.AparelhoServico;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.MetodologiaServico;
 import br.com.novotreino.servico.TreinoServico;
+import br.com.novotreino.util.ControleUtil;
 import br.com.novotreino.util.MensagemUtil;
 
 @Named
@@ -34,6 +40,12 @@ public class TreinoController extends BaseController<Treino> implements
 	private AparelhoServico aparelhoServico;
 	@EJB
 	private MetodologiaServico metodologiaServico;
+	@EJB
+	private AcademiaServico academiaServico;
+	@Inject
+	private LoginController loginController;
+	@Inject
+	private ControleUtil controleUtil;
 
 	private Treino treino;
 	private List<Treino> treinos;
@@ -47,6 +59,10 @@ public class TreinoController extends BaseController<Treino> implements
 	private Metodologia metodologiaSelecionada;
 	private List<Metodologia> metodologias;
 
+	private List<Academia> academias;
+	private Academia academiaSelecionada;
+	private Usuario usuarioSessao;
+
 	@Override
 	@PostConstruct
 	public void inicializar() {
@@ -55,14 +71,38 @@ public class TreinoController extends BaseController<Treino> implements
 		exercicio = new Exercicio();
 		exercicios = new ArrayList<Exercicio>();
 		metodologiaSelecionada = new Metodologia();
+		buscarUsuarioSessao();
+		buscarAcademias();
 		buscarTreinos();
 		buscarAparelhos();
 		buscarMetodologias();
 	}
 
+	private void buscarUsuarioSessao() {
+		usuarioSessao = (Usuario) controleUtil
+				.getSessao(EString.NOME_SESSAO_USUARIO.getValue());
+	}
+
+	private void buscarAcademias() {
+		try {
+			if (loginController.checarPerfilAdmin()) {
+				academias = academiaServico.obterTodos();
+			} else {
+				academias = new ArrayList<Academia>();
+				academias.add(usuarioSessao.getAcademia());
+				academiaSelecionada = usuarioSessao.getAcademia();
+			}
+		} catch (BaseServicoException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void buscarMetodologias() {
 		try {
-			metodologias = metodologiaServico.obterTodos();
+			if (academiaSelecionada != null) {
+				metodologias = metodologiaServico
+						.obterTodosPorAcademia(academiaSelecionada);
+			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
@@ -70,7 +110,10 @@ public class TreinoController extends BaseController<Treino> implements
 
 	private void buscarAparelhos() {
 		try {
-			aparelhos = aparelhoServico.obterTodos();
+			if (academiaSelecionada != null) {
+				aparelhos = aparelhoServico
+						.obterTodosPorAcademia(academiaSelecionada);
+			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
@@ -78,10 +121,19 @@ public class TreinoController extends BaseController<Treino> implements
 
 	private void buscarTreinos() {
 		try {
-			treinos = treinoServico.obterTodos();
+			if (loginController.checarPerfilAdmin()) {
+				treinos = treinoServico.obterTodos();
+			} else {
+				treinos = treinoServico.obterTodosPorAcademia(usuarioSessao.getAcademia());
+			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void carregarMetodologiaEAparelho() {
+		buscarMetodologias();
+		buscarAparelhos();
 	}
 
 	public void adicionarExercicio() {
@@ -107,6 +159,7 @@ public class TreinoController extends BaseController<Treino> implements
 	@Override
 	public String salvar() {
 		if (validarTreino()) {
+			treino.setAcademia(academiaSelecionada);
 			treino.setExercicios(exercicios);
 			treino.setMetodologia(metodologiaSelecionada);
 			try {
@@ -148,7 +201,8 @@ public class TreinoController extends BaseController<Treino> implements
 				inicializar();
 				MensagemUtil.gerarSucesso("Treino.", "Excluido com suceso.");
 			} else {
-				MensagemUtil.gerarErro("Treino.", "Este treino esta sendo ultilizado por Aluno.");
+				MensagemUtil.gerarErro("Treino.",
+						"Este treino esta sendo ultilizado por Aluno.");
 			}
 			setIndexTab(1);
 		} catch (BaseServicoException e) {
@@ -159,6 +213,7 @@ public class TreinoController extends BaseController<Treino> implements
 	@Override
 	public void editar(Treino k) {
 		treino = k;
+		academiaSelecionada = k.getAcademia();
 		buscarAparelhos();
 		buscarMetodologias();
 		buscarTreinos();
@@ -259,5 +314,21 @@ public class TreinoController extends BaseController<Treino> implements
 
 	public void setMetodologias(List<Metodologia> metodologias) {
 		this.metodologias = metodologias;
+	}
+
+	public List<Academia> getAcademias() {
+		return academias;
+	}
+
+	public void setAcademias(List<Academia> academias) {
+		this.academias = academias;
+	}
+
+	public Academia getAcademiaSelecionada() {
+		return academiaSelecionada;
+	}
+
+	public void setAcademiaSelecionada(Academia academiaSelecionada) {
+		this.academiaSelecionada = academiaSelecionada;
 	}
 }

@@ -8,17 +8,23 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Aluno;
 import br.com.novotreino.entidade.AlunoTreino;
 import br.com.novotreino.entidade.Metodologia;
 import br.com.novotreino.entidade.Treino;
+import br.com.novotreino.entidade.Usuario;
+import br.com.novotreino.enums.EString;
+import br.com.novotreino.servico.AcademiaServico;
 import br.com.novotreino.servico.AlunoServico;
 import br.com.novotreino.servico.AlunoTreinoServico;
 import br.com.novotreino.servico.BaseServicoException;
 import br.com.novotreino.servico.MetodologiaServico;
 import br.com.novotreino.servico.TreinoServico;
+import br.com.novotreino.util.ControleUtil;
 import br.com.novotreino.util.MensagemUtil;
 
 @Named
@@ -36,6 +42,12 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	private MetodologiaServico metodologiaServico;
 	@EJB
 	private AlunoTreinoServico alunoTreinoServico;
+	@EJB
+	private AcademiaServico academiaServico;
+	@Inject
+	private LoginController loginController;
+	@Inject
+	private ControleUtil controleUtil;
 
 	private Aluno alunoSelecionado;
 	private List<Aluno> alunos;
@@ -52,6 +64,9 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	private Integer idAlunoAnterior;
 	private boolean editar;
 
+	private List<Academia> academias;
+	private Academia academiaSelecionada;
+	private Usuario usuarioSessao;
 	// private List<AlunoTreino> alunosTreinos;
 	private List<Aluno> alunoTreinos;
 
@@ -62,11 +77,32 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 		alunoSelecionado = null;
 		validadeTreino = null;
 		idAlunoAnterior = 0;
+		buscarUsuarioSessao();
+		buscarAcademias();
 		buscarAlunos();
 		buscarMetodologias();
 		buscarAlunosTreinos();
 	}
 
+	private void buscarUsuarioSessao() {
+		usuarioSessao = (Usuario) controleUtil
+				.getSessao(EString.NOME_SESSAO_USUARIO.getValue());
+	}
+
+	private void buscarAcademias() {
+		try {
+			if (loginController.checarPerfilAdmin()) {
+				academias = academiaServico.obterTodos();
+			} else {
+				academias = new ArrayList<Academia>();
+				academias.add(usuarioSessao.getAcademia());
+				academiaSelecionada = usuarioSessao.getAcademia();
+			}
+		} catch (BaseServicoException e) {
+			e.printStackTrace();
+		}
+	}
+	// TODO obter o aluno atraves da academia selecionada.
 	private void buscarAlunos() {
 		try {
 			alunos = alunoServico.obterTodos();

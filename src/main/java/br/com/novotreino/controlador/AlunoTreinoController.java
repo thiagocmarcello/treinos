@@ -73,6 +73,7 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	@Override
 	@PostConstruct
 	public void inicializar() {
+		editar = false;
 		treinosCadastro = new ArrayList<Treino>();
 		alunoSelecionado = null;
 		validadeTreino = null;
@@ -102,10 +103,13 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 			e.printStackTrace();
 		}
 	}
-	// TODO obter o aluno atraves da academia selecionada.
+
 	private void buscarAlunos() {
 		try {
-			alunos = alunoServico.obterTodos();
+			if (academiaSelecionada != null) {
+				alunos = alunoServico
+						.obterTodosPorAcademia(academiaSelecionada);
+			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
@@ -113,7 +117,10 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 
 	public void buscarTreinos() {
 		try {
-			treinos = treinoServico.obterPorMetodologia(metodologiaSelecionada);
+			if (metodologiaSelecionada != null) {
+				treinos = treinoServico
+						.obterPorMetodologia(metodologiaSelecionada);
+			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
@@ -121,7 +128,10 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 
 	private void buscarMetodologias() {
 		try {
-			metodologias = metodologiaServico.obterTodos();
+			if (academiaSelecionada != null) {
+				metodologias = metodologiaServico
+						.obterTodosPorAcademia(academiaSelecionada);
+			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
@@ -129,10 +139,20 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 
 	public void buscarAlunosTreinos() {
 		try {
-			alunoTreinos = alunoTreinoServico.buscarAlunoTreino();
+			if (loginController.checarPerfilAdmin()) {
+				alunoTreinos = alunoTreinoServico.buscarAlunoTreino();
+			} else {
+				alunoTreinos = alunoTreinoServico
+						.buscarAlunoTreino(academiaSelecionada);
+			}
 		} catch (BaseServicoException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void carregarMetodologiaEAparelho() {
+		buscarMetodologias();
+		buscarAlunos();
 	}
 
 	public void adicionarTreino() {
@@ -185,8 +205,8 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 				if (editar) {
 					alunoServico.alterar(alunoSelecionado);
 					if (alunoSelecionado.getId() == idAlunoAnterior) {
-					MensagemUtil.gerarSucesso("Aluno Treino.",
-							"Alterado com sucesso.");
+						MensagemUtil.gerarSucesso("Aluno Treino.",
+								"Alterado com sucesso.");
 					} else {
 						MensagemUtil.gerarSucesso("Aluno Treino.",
 								"Treino clonado com sucesso.");
@@ -244,9 +264,13 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 	public void editarAluno(Object k) {
 		try {
 			Aluno aluno = (Aluno) k;
+			academiaSelecionada = aluno.getAcademia();
+			buscarAlunos();
 			idAlunoAnterior = aluno.getId();
 			alunoSelecionado = aluno;
-			metodologiaSelecionada = metodologias.get(0);
+			buscarMetodologias();
+			//metodologiaSelecionada = academiaSelecionada.get.getMetodologia();
+			treinos = new ArrayList<>();
 			treinos = treinoServico.obterPorMetodologia(metodologiaSelecionada);
 			for (AlunoTreino at : aluno.getAlunosTreinos()) {
 				if (treinosCadastro == null) {
@@ -258,7 +282,6 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 			editar = true;
 			setIndexTab(0);
 		} catch (BaseServicoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -317,6 +340,22 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 		return metodologiaSelecionada;
 	}
 
+	public List<Academia> getAcademias() {
+		return academias;
+	}
+
+	public void setAcademias(List<Academia> academias) {
+		this.academias = academias;
+	}
+
+	public Academia getAcademiaSelecionada() {
+		return academiaSelecionada;
+	}
+
+	public void setAcademiaSelecionada(Academia academiaSelecionada) {
+		this.academiaSelecionada = academiaSelecionada;
+	}
+
 	public void setMetodologiaSelecionada(Metodologia metodologiaSelecionada) {
 		this.metodologiaSelecionada = metodologiaSelecionada;
 	}
@@ -351,5 +390,13 @@ public class AlunoTreinoController extends BaseController<AlunoTreino>
 
 	public void setAlunoTreinos(List<Aluno> alunoTreinos) {
 		this.alunoTreinos = alunoTreinos;
+	}
+
+	public boolean isEditar() {
+		return editar;
+	}
+
+	public void setEditar(boolean editar) {
+		this.editar = editar;
 	}
 }

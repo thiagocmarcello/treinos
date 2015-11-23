@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 html,body{width:100%;height:100%}
-html{background:#e7e8f3 url("../imagens/fundo_faixa_login.png") left top repeat-y}
+html{background:#FFFDF4}
 body{font-family:Arial,sans-serif;font-size:12px;color:#7e7f81;background:url("../imagens/fundo_detalhe_login.png") left top no-repeat}
 
 *{margin:0;padding:0}
@@ -19,13 +19,13 @@ h1{margin-bottom:10px;font-size:22px}
 
 label input {padding:6px 7px;font-size:18px;text-transform:uppercase;background:#fff;border:1px solid #ccc;width:354px;border-radius:3px}
 
-.wrap_geral {position:relative;padding-top:100px}
+.wrap_geral {position:relative;padding-top:150px}
 
-.wrap_login{margin:0 auto;width:710px}
+.wrap_login{margin:0 auto;width:450PX}
 .col_01,.col_02{float:left}
 
 .col_01{margin-right:20px;width:297px}
-.col_02{padding-left:21px;background:url("../imagens/div_vert_login.png") left top no-repeat;width:370px}
+.col_02{padding-left:21px;width:370px}
 
 .logo{margin:47px 0 10px;background:url("../imagens/background.jpg") repeat;width:297px;height:150px}
 .copyright{text-align:center}
@@ -37,7 +37,7 @@ label input {padding:6px 7px;font-size:18px;text-transform:uppercase;background:
 
 .wrap_bt_dados{padding-top:15px;background:url("../imagens/sombra_form_login.png") center top no-repeat}
 
-.bt_acessar{float:right;padding:7px 10px 5px;font-size:14px;font-weight:bold;color:#7e7f81;background:#dadada url("../imagens/fundo_bt.png") left top repeat-x;border:1px solid #ccc;border-radius:3px;cursor:pointer}
+.bt_acessar{float:right; padding:7px 10px 5px;font-size:14px;font-weight:bold;color:#7e7f81;background:#dadada url("../imagens/fundo_bt.png") left top repeat-x;border:1px solid #ccc;border-radius:3px;cursor:pointer}
 .bt_acessar:hover{color:#919292;box-shadow:inset 2px 2px 2px #ddd;}
 
 .esqueci_senha,.dados_atendimento{display:block;margin-bottom:7px;padding-left:21px;font-size:11px;line-height:16px}

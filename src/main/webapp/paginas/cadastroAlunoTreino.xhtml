@@ -16,9 +16,23 @@
 					styleClass="sem-bordas">
 					<p:tab title="Cadastrar">
 						<h:panelGrid columns="2">
+						
+						<p:outputLabel for="academiaSOM" value="Academia"
+								rendered="#{loginController.checarPerfilAdmin()}" />
+							<p:selectOneMenu
+								rendered="#{loginController.checarPerfilAdmin()}" disabled="#{alunoTreinoController.editar}"
+								id="academiaSOM" required="true"
+								requiredMessage="Selecione a academia."
+								value="#{alunoTreinoController.academiaSelecionada}"
+								converter="academiaConverter">
+								<f:selectItem itemLabel="Selecione..." itemValue="0" />
+								<f:selectItems value="#{alunoTreinoController.academias}"
+									var="o" itemValue="#{o}" itemLabel="#{o.nome}" />
+								<p:ajax listener="#{alunoTreinoController.carregarMetodologiaEAparelho()}" update=":alunoTreinoFO:alunoTreinoTV:alunoSOM :alunoTreinoFO:alunoTreinoTV:metodologiaSOM"/>
+							</p:selectOneMenu>
 
 							<p:outputLabel for="alunoSOM" value="Aluno" />
-							<p:selectOneMenu id="alunoSOM" required="true"
+							<p:selectOneMenu id="alunoSOM" required="true" disabled="#{alunoTreinoController.alunos eq null}"
 								requiredMessage="Campo Aluno obrigatório!"
 								value="#{alunoTreinoController.alunoSelecionado}"
 								converter="converterAluno">
@@ -37,7 +51,7 @@
 							</p:calendar>
 
 							<p:outputLabel for="metodologiaSOM" value="Metodologia" />
-							<p:selectOneMenu id="metodologiaSOM" required="true"
+							<p:selectOneMenu id="metodologiaSOM" required="true" disabled="#{alunoTreinoController.metodologias eq null}"
 								requiredMessage="Campo Metodologia obrigatório!"
 								value="#{alunoTreinoController.metodologiaSelecionada}"
 								converter="converterAluno">
@@ -51,7 +65,7 @@
 							<h:outputLabel value="Treino:">
 							</h:outputLabel>
 							<p:selectOneMenu id="treinoSOM"
-								value="#{alunoTreinoController.treinoSelecionado}"
+								value="#{alunoTreinoController.treinoSelecionado}" disabled="#{alunoTreinoController.treinos eq null}"
 								converter="converterTreino">
 								<f:selectItem itemLabel="Selecione..." itemValue="0" />
 								<f:selectItems value="#{alunoTreinoController.treinos}" var="o"
@@ -104,6 +118,14 @@
 										<h:outputText value="Validade" />
 									</f:facet>
 									<h:outputText value="#{p.alunosTreinos.get(0).dataFim}" >
+									<f:convertDateTime pattern="dd/MM/yyyy"/>  
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Academia" />
+									</f:facet>
+									<h:outputText value="#{p.academia.nome}" >
 									<f:convertDateTime pattern="dd/MM/yyyy"/>  
 									</h:outputText>
 								</p:column>

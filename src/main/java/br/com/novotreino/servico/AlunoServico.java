@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import br.com.novotreino.dao.AlunoDAO;
 import br.com.novotreino.dao.BaseDAOException;
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Aluno;
 import br.com.novotreino.entidade.Usuario;
 import br.com.novotreino.enums.EPerfil;
@@ -36,5 +37,9 @@ public class AlunoServico extends BaseServico<Aluno> {
 		} catch (BaseDAOException e) {
 			throw new BaseServicoException(e.getMessage());
 		}
+	}
+
+	public List<Aluno> obterTodosPorAcademia(Academia academiaSelecionada) throws BaseServicoException {
+		return alunoDAO.obterTodosPorAcademia(academiaSelecionada);
 	}
 }

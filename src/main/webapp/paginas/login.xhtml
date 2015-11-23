@@ -2,18 +2,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html">
 <h:head>
-	<link rel="StyleSheet" type="text/css" href="#{facesContext.externalContext.request.contextPath}/css/stylesLogin.css" />
+	<link rel="StyleSheet" type="text/css"
+		href="#{facesContext.externalContext.request.contextPath}/css/stylesLogin.css" />
 </h:head>
 <h:body>
 	<h:form>
 		<div class="wrap_geral">
 			<div class="wrap_login clean">
-				<div class="col_01">
-					<div class="logo"></div>
-					<p class="copyright">Meu Treino | 2015.</p>
-				</div>
+				<!-- 				<div class="col_01"> -->
+				<!-- 					<div class="logo"></div> -->
+				<!-- 					<p class="copyright">Meu Treino | 2015.</p> -->
+				<!-- 				</div> -->
 				<div class="col_02">
 					<h1>SEJA BEM-VINDO</h1>
 					<div class="form_login">
@@ -22,17 +23,12 @@
 						</label> <label> <span>Senha</span> <h:inputSecret id="senha"
 								value="#{loginController.senha}" />
 						</label>
-						<div class="wrap_bt_dados clear">
+						<div class="wrap_bt_dados">
 							<h:commandButton value="ENTRAR"
 								action="#{loginController.autenticar()}" styleClass="bt_acessar" />
-							<!--                                 <h:commandLink action="# {menuManager.esqueciSenhaCreate()}" -->
-							<!--                                                value="Esqueci minha senha" -->
-							<!--                                                styleClass="esqueci_senha" -->
-							<!--                                                rendered="false" /> -->
-							<p class="dados_atendimento">
-								Segunda a sexta das 8:00 às 21:00h<br /> Sábado das 8:00 às
-								16:00h<br /> 43 3304-2204
-							</p>
+							<h:commandLink action="# {menuManager.esqueciSenhaCreate()}"
+								value="Esqueci minha senha"
+								rendered="true" />
 						</div>
 					</div>
 				</div>

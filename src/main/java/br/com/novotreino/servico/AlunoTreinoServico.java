@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import br.com.novotreino.dao.AlunoTreinoDAO;
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Aluno;
 import br.com.novotreino.entidade.AlunoTreino;
 import br.com.novotreino.entidade.Treino;
@@ -57,6 +58,10 @@ public class AlunoTreinoServico extends BaseServico<AlunoTreino> {
 	public List<Aluno> buscarAlunoTreino() throws BaseServicoException {
 		return alunoTreinoDAO.buscarAlunoTreino();
 	}
+	
+	public List<Aluno> buscarAlunoTreino(Academia academia) throws BaseServicoException {
+		return alunoTreinoDAO.buscarAlunoTreino(academia);
+	} 
 
 	public void deletarAlunosTreinos(List<AlunoTreino> alunosTreinos)
 			throws BaseServicoException {

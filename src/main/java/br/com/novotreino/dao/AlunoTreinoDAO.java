@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.envers.internal.entities.mapper.relation.lazy.proxy.SetProxy;
 
+import br.com.novotreino.entidade.Academia;
 import br.com.novotreino.entidade.Aluno;
 import br.com.novotreino.entidade.AlunoTreino;
 
@@ -23,6 +24,14 @@ public class AlunoTreinoDAO extends BaseDAO<AlunoTreino> {
 	public List<Aluno> buscarAlunoTreino() throws BaseDAOException {
 		return getEm().createQuery(
 				"select distinct(at.aluno) from AlunoTreino at")
+				.getResultList();
+	}
+	
+	public List<Aluno> buscarAlunoTreino(Academia academia) throws BaseDAOException {
+		return getEm().createQuery(
+				"select distinct(at.aluno) from AlunoTreino at"
+				+ " where at.aluno.academia = :_academia")
+				.setParameter("_academia", academia)
 				.getResultList();
 	}
 
